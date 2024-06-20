@@ -1,0 +1,10 @@
+﻿Diagnosis,DiagnosisCount,Disease
+Y,3,Common Cold
+N,2,Common Cold
+Y,1,Chicken Pox
+N,1,Chicken Pox
+Y,1,Diabetes
+N,3,Diabetes
+N,2,Malaria
+Y,3,Allergy
+N,4,Allergy

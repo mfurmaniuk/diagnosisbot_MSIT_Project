@@ -1,0 +1,408 @@
+[{
+  "_id": {
+    "$oid": "663b4a04e2f6c75c6cb22356"
+  },
+  "treatment": "Drug Reaction",
+  "immediate": "stop irritation",
+  "secondstep": "consult nearest hospital",
+  "thirdstep": "stop taking drug",
+  "longterm": "follow up"
+},
+{
+  "_id": {
+    "$oid": "663b4a04e2f6c75c6cb22357"
+  },
+  "treatment": "Malaria",
+  "immediate": "Consult nearest hospital",
+  "secondstep": "avoid oily food",
+  "thirdstep": "avoid non veg food",
+  "longterm": "keep mosquitos out"
+},
+{
+  "_id": {
+    "$oid": "663b4a04e2f6c75c6cb22358"
+  },
+  "treatment": "Allergy",
+  "immediate": "apply calamine",
+  "secondstep": "cover area with bandage",
+  "longterm": "use ice to compress itching"
+},
+{
+  "_id": {
+    "$oid": "663b4a04e2f6c75c6cb22359"
+  },
+  "treatment": "Hypothyroidism",
+  "immediate": "reduce stress",
+  "secondstep": "exercise",
+  "thirdstep": "eat healthy",
+  "longterm": "get proper sleep"
+},
+{
+  "_id": {
+    "$oid": "663b4a04e2f6c75c6cb2235a"
+  },
+  "treatment": "Psoriasis",
+  "immediate": "wash hands with warm soapy water",
+  "secondstep": "stop bleeding using pressure",
+  "thirdstep": "consult doctor",
+  "longterm": "salt baths"
+},
+{
+  "_id": {
+    "$oid": "663b4a04e2f6c75c6cb2235b"
+  },
+  "treatment": "GERD",
+  "immediate": "avoid fatty spicy food",
+  "secondstep": "avoid lying down after eating",
+  "thirdstep": "maintain healthy weight",
+  "longterm": "exercise"
+},
+{
+  "_id": {
+    "$oid": "663b4a04e2f6c75c6cb2235c"
+  },
+  "treatment": "Chronic cholestasis",
+  "immediate": "cold baths",
+  "secondstep": "anti itch medicine",
+  "thirdstep": "consult doctor",
+  "longterm": "eat healthy"
+},
+{
+  "_id": {
+    "$oid": "663b4a04e2f6c75c6cb2235d"
+  },
+  "treatment": "hepatitis A",
+  "immediate": "Consult nearest hospital",
+  "secondstep": "wash hands through",
+  "thirdstep": "avoid fatty spicy food",
+  "longterm": "medication"
+},
+{
+  "_id": {
+    "$oid": "663b4a04e2f6c75c6cb2235e"
+  },
+  "treatment": "Osteoarthristis",
+  "immediate": "acetaminophen",
+  "secondstep": "consult nearest hospital",
+  "thirdstep": "follow up",
+  "longterm": "salt baths"
+},
+{
+  "_id": {
+    "$oid": "663b4a04e2f6c75c6cb2235f"
+  },
+  "treatment": "(vertigo) Paroymsal  Positional Vertigo",
+  "immediate": "lie down",
+  "secondstep": "avoid sudden change in body",
+  "thirdstep": "avoid abrupt head movment",
+  "longterm": "relax"
+},
+{
+  "_id": {
+    "$oid": "663b4a04e2f6c75c6cb22360"
+  },
+  "treatment": "Hypoglycemia",
+  "immediate": "lie down on side",
+  "secondstep": "check in pulse",
+  "thirdstep": "drink sugary drinks",
+  "longterm": "consult doctor"
+},
+{
+  "_id": {
+    "$oid": "663b4a04e2f6c75c6cb22361"
+  },
+  "treatment": "Acne",
+  "immediate": "bath twice",
+  "secondstep": "avoid fatty spicy food",
+  "thirdstep": "drink plenty of water",
+  "longterm": "avoid too many products"
+},
+{
+  "_id": {
+    "$oid": "663b4a04e2f6c75c6cb22362"
+  },
+  "treatment": "Diabetes ",
+  "immediate": "have balanced diet",
+  "secondstep": "exercise",
+  "thirdstep": "consult doctor",
+  "longterm": "follow up"
+},
+{
+  "_id": {
+    "$oid": "663b4a04e2f6c75c6cb22363"
+  },
+  "treatment": "Impetigo",
+  "immediate": "soak affected area in warm water",
+  "secondstep": "use antibiotics",
+  "thirdstep": "remove scabs with wet compressed cloth",
+  "longterm": "consult doctor"
+},
+{
+  "_id": {
+    "$oid": "663b4a04e2f6c75c6cb22364"
+  },
+  "treatment": "Hypertension ",
+  "immediate": "meditation",
+  "secondstep": "salt baths",
+  "thirdstep": "reduce stress",
+  "longterm": "get proper sleep"
+},
+{
+  "_id": {
+    "$oid": "663b4a04e2f6c75c6cb22365"
+  },
+  "treatment": "Peptic ulcer diseae",
+  "immediate": "avoid fatty spicy food",
+  "secondstep": "consume probiotic food",
+  "thirdstep": "eliminate milk",
+  "longterm": "limit alcohol"
+},
+{
+  "_id": {
+    "$oid": "663b4a04e2f6c75c6cb22366"
+  },
+  "treatment": "Dimorphic hemmorhoids(piles)",
+  "immediate": "avoid fatty spicy food",
+  "secondstep": "consume witch hazel",
+  "thirdstep": "warm bath with epsom salt",
+  "longterm": "consume alovera juice"
+},
+{
+  "_id": {
+    "$oid": "663b4a04e2f6c75c6cb22367"
+  },
+  "treatment": "Common Cold",
+  "immediate": "drink vitamin c rich drinks",
+  "secondstep": "take vapour",
+  "thirdstep": "avoid cold food",
+  "longterm": "keep fever in check"
+},
+{
+  "_id": {
+    "$oid": "663b4a04e2f6c75c6cb22368"
+  },
+  "treatment": "Chicken pox",
+  "immediate": "use neem in bathing ",
+  "secondstep": "consume neem leaves",
+  "thirdstep": "take vaccine",
+  "longterm": "avoid public places"
+},
+{
+  "_id": {
+    "$oid": "663b4a04e2f6c75c6cb22369"
+  },
+  "treatment": "Cervical spondylosis",
+  "immediate": "use heating pad or cold pack",
+  "secondstep": "exercise",
+  "thirdstep": "take otc pain reliver",
+  "longterm": "consult doctor"
+},
+{
+  "_id": {
+    "$oid": "663b4a04e2f6c75c6cb2236a"
+  },
+  "treatment": "Hyperthyroidism",
+  "immediate": "eat healthy",
+  "secondstep": "massage",
+  "thirdstep": "use lemon balm",
+  "longterm": "take radioactive iodine treatment"
+},
+{
+  "_id": {
+    "$oid": "663b4a04e2f6c75c6cb2236b"
+  },
+  "treatment": "Urinary tract infection",
+  "immediate": "drink plenty of water",
+  "secondstep": "increase vitamin c intake",
+  "thirdstep": "drink cranberry juice",
+  "longterm": "take probiotics"
+},
+{
+  "_id": {
+    "$oid": "663b4a04e2f6c75c6cb2236c"
+  },
+  "treatment": "Varicose veins",
+  "immediate": "lie down flat and raise the leg high",
+  "secondstep": "use oinments",
+  "thirdstep": "use vein compression",
+  "longterm": "dont stand still for long"
+},
+{
+  "_id": {
+    "$oid": "663b4a04e2f6c75c6cb2236d"
+  },
+  "treatment": "AIDS",
+  "immediate": "avoid open cuts",
+  "secondstep": "wear ppe if possible",
+  "thirdstep": "consult doctor",
+  "longterm": "follow up"
+},
+{
+  "_id": {
+    "$oid": "663b4a04e2f6c75c6cb2236e"
+  },
+  "treatment": "Paralysis (brain hemorrhage)",
+  "immediate": "massage",
+  "secondstep": "eat healthy",
+  "thirdstep": "exercise",
+  "longterm": "consult doctor"
+},
+{
+  "_id": {
+    "$oid": "663b4a04e2f6c75c6cb2236f"
+  },
+  "treatment": "Typhoid",
+  "immediate": "eat high calorie vegitables",
+  "secondstep": "antiboitic therapy",
+  "thirdstep": "consult doctor",
+  "longterm": "medication"
+},
+{
+  "_id": {
+    "$oid": "663b4a04e2f6c75c6cb22370"
+  },
+  "treatment": "Hepatitis B",
+  "immediate": "consult nearest hospital",
+  "secondstep": "vaccination",
+  "thirdstep": "eat healthy",
+  "longterm": "medication"
+},
+{
+  "_id": {
+    "$oid": "663b4a04e2f6c75c6cb22371"
+  },
+  "treatment": "Fungal infection",
+  "immediate": "bath twice",
+  "secondstep": "use detol or neem in bathing water",
+  "thirdstep": "keep infected area dry",
+  "longterm": "use clean cloths"
+},
+{
+  "_id": {
+    "$oid": "663b4a04e2f6c75c6cb22372"
+  },
+  "treatment": "Hepatitis C",
+  "immediate": "Consult nearest hospital",
+  "secondstep": "vaccination",
+  "thirdstep": "eat healthy",
+  "longterm": "medication"
+},
+{
+  "_id": {
+    "$oid": "663b4a04e2f6c75c6cb22373"
+  },
+  "treatment": "Migraine",
+  "immediate": "meditation",
+  "secondstep": "reduce stress",
+  "thirdstep": "use poloroid glasses in sun",
+  "longterm": "consult doctor"
+},
+{
+  "_id": {
+    "$oid": "663b4a04e2f6c75c6cb22374"
+  },
+  "treatment": "Bronchial Asthma",
+  "immediate": "switch to loose cloothing",
+  "secondstep": "take deep breaths",
+  "thirdstep": "get away from trigger",
+  "longterm": "seek help"
+},
+{
+  "_id": {
+    "$oid": "663b4a04e2f6c75c6cb22375"
+  },
+  "treatment": "Alcoholic hepatitis",
+  "immediate": "stop alcohol consumption",
+  "secondstep": "consult doctor",
+  "thirdstep": "medication",
+  "longterm": "follow up"
+},
+{
+  "_id": {
+    "$oid": "663b4a04e2f6c75c6cb22376"
+  },
+  "treatment": "Jaundice",
+  "immediate": "drink plenty of water",
+  "secondstep": "consume milk thistle",
+  "thirdstep": "eat fruits and high fiberous food",
+  "longterm": "medication"
+},
+{
+  "_id": {
+    "$oid": "663b4a04e2f6c75c6cb22377"
+  },
+  "treatment": "Hepatitis E",
+  "immediate": "stop alcohol consumption",
+  "secondstep": "rest",
+  "thirdstep": "consult doctor",
+  "longterm": "medication"
+},
+{
+  "_id": {
+    "$oid": "663b4a04e2f6c75c6cb22378"
+  },
+  "treatment": "Dengue",
+  "immediate": "drink papaya leaf juice",
+  "secondstep": "avoid fatty spicy food",
+  "thirdstep": "keep mosquitos away",
+  "longterm": "keep hydrated"
+},
+{
+  "_id": {
+    "$oid": "663b4a04e2f6c75c6cb22379"
+  },
+  "treatment": "Hepatitis D",
+  "immediate": "consult doctor",
+  "secondstep": "medication",
+  "thirdstep": "eat healthy",
+  "longterm": "follow up"
+},
+{
+  "_id": {
+    "$oid": "663b4a04e2f6c75c6cb2237a"
+  },
+  "treatment": "Heart attack",
+  "immediate": "call ambulance",
+  "secondstep": "chew or swallow asprin",
+  "thirdstep": "keep calm"
+},
+{
+  "_id": {
+    "$oid": "663b4a04e2f6c75c6cb2237b"
+  },
+  "treatment": "Pneumonia",
+  "immediate": "consult doctor",
+  "secondstep": "medication",
+  "thirdstep": "rest",
+  "longterm": "follow up"
+},
+{
+  "_id": {
+    "$oid": "663b4a04e2f6c75c6cb2237c"
+  },
+  "treatment": "Arthritis",
+  "immediate": "exercise",
+  "secondstep": "use hot and cold therapy",
+  "thirdstep": "try acupuncture",
+  "longterm": "massage"
+},
+{
+  "_id": {
+    "$oid": "663b4a04e2f6c75c6cb2237d"
+  },
+  "treatment": "Gastroenteritis",
+  "immediate": "stop eating solid food for while",
+  "secondstep": "try taking small sips of water",
+  "thirdstep": "rest",
+  "longterm": "ease back into eating"
+},
+{
+  "_id": {
+    "$oid": "663b4a04e2f6c75c6cb2237e"
+  },
+  "treatment": "Tuberculosis",
+  "immediate": "cover mouth",
+  "secondstep": "consult doctor",
+  "thirdstep": "medication",
+  "longterm": "rest"
+}]

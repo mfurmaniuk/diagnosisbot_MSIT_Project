@@ -1,0 +1,72 @@
+[{
+  "_id": {
+    "$oid": "663c9943905d7b71f2d7d927"
+  },
+  "Diagnosis": "Y",
+  "DiagnosisCount": 3,
+  "Disease": "Common Cold"
+},
+{
+  "_id": {
+    "$oid": "663c9943905d7b71f2d7d928"
+  },
+  "Diagnosis": "N",
+  "DiagnosisCount": 2,
+  "Disease": "Common Cold"
+},
+{
+  "_id": {
+    "$oid": "663c9943905d7b71f2d7d929"
+  },
+  "Diagnosis": "Y",
+  "DiagnosisCount": 1,
+  "Disease": "Chicken Pox"
+},
+{
+  "_id": {
+    "$oid": "663c9943905d7b71f2d7d92a"
+  },
+  "Diagnosis": "N",
+  "DiagnosisCount": 1,
+  "Disease": "Chicken Pox"
+},
+{
+  "_id": {
+    "$oid": "663c9943905d7b71f2d7d92b"
+  },
+  "Diagnosis": "Y",
+  "DiagnosisCount": 1,
+  "Disease": "Diabetes"
+},
+{
+  "_id": {
+    "$oid": "663c9943905d7b71f2d7d92c"
+  },
+  "Diagnosis": "N",
+  "DiagnosisCount": 3,
+  "Disease": "Diabetes"
+},
+{
+  "_id": {
+    "$oid": "663c9943905d7b71f2d7d92d"
+  },
+  "Diagnosis": "N",
+  "DiagnosisCount": 2,
+  "Disease": "Malaria"
+},
+{
+  "_id": {
+    "$oid": "663c9943905d7b71f2d7d92e"
+  },
+  "Diagnosis": "Y",
+  "DiagnosisCount": 3,
+  "Disease": "Allergy"
+},
+{
+  "_id": {
+    "$oid": "663c9943905d7b71f2d7d92f"
+  },
+  "Diagnosis": "N",
+  "DiagnosisCount": 4,
+  "Disease": "Allergy"
+}]

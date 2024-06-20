@@ -1,0 +1,929 @@
+[{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222d0"
+  },
+  "symptom": "itching",
+  "symptom_severity": 1
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222d1"
+  },
+  "symptom": "skin_rash",
+  "symptom_severity": 3
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222d2"
+  },
+  "symptom": "nodal_skin_eruptions",
+  "symptom_severity": 4
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222d3"
+  },
+  "symptom": "continuous_sneezing",
+  "symptom_severity": 4
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222d4"
+  },
+  "symptom": "shivering",
+  "symptom_severity": 5
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222d5"
+  },
+  "symptom": "chills",
+  "symptom_severity": 3
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222d6"
+  },
+  "symptom": "joint_pain",
+  "symptom_severity": 3
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222d7"
+  },
+  "symptom": "stomach_pain",
+  "symptom_severity": 5
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222d8"
+  },
+  "symptom": "acidity",
+  "symptom_severity": 3
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222d9"
+  },
+  "symptom": "ulcers_on_tongue",
+  "symptom_severity": 4
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222da"
+  },
+  "symptom": "muscle_wasting",
+  "symptom_severity": 3
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222db"
+  },
+  "symptom": "vomiting",
+  "symptom_severity": 5
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222dc"
+  },
+  "symptom": "burning_micturition",
+  "symptom_severity": 6
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222dd"
+  },
+  "symptom": "spotting_urination",
+  "symptom_severity": 6
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222de"
+  },
+  "symptom": "fatigue",
+  "symptom_severity": 4
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222df"
+  },
+  "symptom": "weight_gain",
+  "symptom_severity": 3
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222e0"
+  },
+  "symptom": "anxiety",
+  "symptom_severity": 4
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222e1"
+  },
+  "symptom": "cold_hands_and_feets",
+  "symptom_severity": 5
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222e2"
+  },
+  "symptom": "mood_swings",
+  "symptom_severity": 3
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222e3"
+  },
+  "symptom": "weight_loss",
+  "symptom_severity": 3
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222e4"
+  },
+  "symptom": "restlessness",
+  "symptom_severity": 5
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222e5"
+  },
+  "symptom": "lethargy",
+  "symptom_severity": 2
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222e6"
+  },
+  "symptom": "patches_in_throat",
+  "symptom_severity": 6
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222e7"
+  },
+  "symptom": "irregular_sugar_level",
+  "symptom_severity": 5
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222e8"
+  },
+  "symptom": "cough",
+  "symptom_severity": 4
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222e9"
+  },
+  "symptom": "high_fever",
+  "symptom_severity": 7
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222ea"
+  },
+  "symptom": "sunken_eyes",
+  "symptom_severity": 3
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222eb"
+  },
+  "symptom": "breathlessness",
+  "symptom_severity": 4
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222ec"
+  },
+  "symptom": "sweating",
+  "symptom_severity": 3
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222ed"
+  },
+  "symptom": "dehydration",
+  "symptom_severity": 4
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222ee"
+  },
+  "symptom": "indigestion",
+  "symptom_severity": 5
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222ef"
+  },
+  "symptom": "headache",
+  "symptom_severity": 3
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222f0"
+  },
+  "symptom": "yellowish_skin",
+  "symptom_severity": 3
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222f1"
+  },
+  "symptom": "dark_urine",
+  "symptom_severity": 4
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222f2"
+  },
+  "symptom": "nausea",
+  "symptom_severity": 5
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222f3"
+  },
+  "symptom": "loss_of_appetite",
+  "symptom_severity": 4
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222f4"
+  },
+  "symptom": "pain_behind_the_eyes",
+  "symptom_severity": 4
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222f5"
+  },
+  "symptom": "back_pain",
+  "symptom_severity": 3
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222f6"
+  },
+  "symptom": "constipation",
+  "symptom_severity": 4
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222f7"
+  },
+  "symptom": "abdominal_pain",
+  "symptom_severity": 4
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222f8"
+  },
+  "symptom": "diarrhoea",
+  "symptom_severity": 6
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222f9"
+  },
+  "symptom": "mild_fever",
+  "symptom_severity": 5
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222fa"
+  },
+  "symptom": "yellow_urine",
+  "symptom_severity": 4
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222fb"
+  },
+  "symptom": "yellowing_of_eyes",
+  "symptom_severity": 4
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222fc"
+  },
+  "symptom": "acute_liver_failure",
+  "symptom_severity": 6
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222fd"
+  },
+  "symptom": "fluid_overload",
+  "symptom_severity": 6
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222fe"
+  },
+  "symptom": "swelling_of_stomach",
+  "symptom_severity": 7
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb222ff"
+  },
+  "symptom": "swelled_lymph_nodes",
+  "symptom_severity": 6
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22300"
+  },
+  "symptom": "malaise",
+  "symptom_severity": 6
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22301"
+  },
+  "symptom": "blurred_and_distorted_vision",
+  "symptom_severity": 5
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22302"
+  },
+  "symptom": "phlegm",
+  "symptom_severity": 5
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22303"
+  },
+  "symptom": "throat_irritation",
+  "symptom_severity": 4
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22304"
+  },
+  "symptom": "redness_of_eyes",
+  "symptom_severity": 5
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22305"
+  },
+  "symptom": "sinus_pressure",
+  "symptom_severity": 4
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22306"
+  },
+  "symptom": "runny_nose",
+  "symptom_severity": 5
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22307"
+  },
+  "symptom": "congestion",
+  "symptom_severity": 5
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22308"
+  },
+  "symptom": "chest_pain",
+  "symptom_severity": 7
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22309"
+  },
+  "symptom": "weakness_in_limbs",
+  "symptom_severity": 7
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb2230a"
+  },
+  "symptom": "fast_heart_rate",
+  "symptom_severity": 5
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb2230b"
+  },
+  "symptom": "pain_during_bowel_movements",
+  "symptom_severity": 5
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb2230c"
+  },
+  "symptom": "pain_in_anal_region",
+  "symptom_severity": 6
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb2230d"
+  },
+  "symptom": "bloody_stool",
+  "symptom_severity": 5
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb2230e"
+  },
+  "symptom": "irritation_in_anus",
+  "symptom_severity": 6
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb2230f"
+  },
+  "symptom": "neck_pain",
+  "symptom_severity": 5
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22310"
+  },
+  "symptom": "dizziness",
+  "symptom_severity": 4
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22311"
+  },
+  "symptom": "cramps",
+  "symptom_severity": 4
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22312"
+  },
+  "symptom": "bruising",
+  "symptom_severity": 4
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22313"
+  },
+  "symptom": "obesity",
+  "symptom_severity": 4
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22314"
+  },
+  "symptom": "swollen_legs",
+  "symptom_severity": 5
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22315"
+  },
+  "symptom": "swollen_blood_vessels",
+  "symptom_severity": 5
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22316"
+  },
+  "symptom": "puffy_face_and_eyes",
+  "symptom_severity": 5
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22317"
+  },
+  "symptom": "enlarged_thyroid",
+  "symptom_severity": 6
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22318"
+  },
+  "symptom": "brittle_nails",
+  "symptom_severity": 5
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22319"
+  },
+  "symptom": "swollen_extremeties",
+  "symptom_severity": 5
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb2231a"
+  },
+  "symptom": "excessive_hunger",
+  "symptom_severity": 4
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb2231b"
+  },
+  "symptom": "extra_marital_contacts",
+  "symptom_severity": 5
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb2231c"
+  },
+  "symptom": "drying_and_tingling_lips",
+  "symptom_severity": 4
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb2231d"
+  },
+  "symptom": "slurred_speech",
+  "symptom_severity": 4
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb2231e"
+  },
+  "symptom": "knee_pain",
+  "symptom_severity": 3
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb2231f"
+  },
+  "symptom": "hip_joint_pain",
+  "symptom_severity": 2
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22320"
+  },
+  "symptom": "muscle_weakness",
+  "symptom_severity": 2
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22321"
+  },
+  "symptom": "stiff_neck",
+  "symptom_severity": 4
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22322"
+  },
+  "symptom": "swelling_joints",
+  "symptom_severity": 5
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22323"
+  },
+  "symptom": "movement_stiffness",
+  "symptom_severity": 5
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22324"
+  },
+  "symptom": "spinning_movements",
+  "symptom_severity": 6
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22325"
+  },
+  "symptom": "loss_of_balance",
+  "symptom_severity": 4
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22326"
+  },
+  "symptom": "unsteadiness",
+  "symptom_severity": 4
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22327"
+  },
+  "symptom": "weakness_of_one_body_side",
+  "symptom_severity": 4
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22328"
+  },
+  "symptom": "loss_of_smell",
+  "symptom_severity": 3
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22329"
+  },
+  "symptom": "bladder_discomfort",
+  "symptom_severity": 4
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb2232a"
+  },
+  "symptom": "foul_smell_ofurine",
+  "symptom_severity": 5
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb2232b"
+  },
+  "symptom": "continuous_feel_of_urine",
+  "symptom_severity": 6
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb2232c"
+  },
+  "symptom": "passage_of_gases",
+  "symptom_severity": 5
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb2232d"
+  },
+  "symptom": "internal_itching",
+  "symptom_severity": 4
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb2232e"
+  },
+  "symptom": "toxic_look_(typhos)",
+  "symptom_severity": 5
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb2232f"
+  },
+  "symptom": "depression",
+  "symptom_severity": 3
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22330"
+  },
+  "symptom": "irritability",
+  "symptom_severity": 2
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22331"
+  },
+  "symptom": "muscle_pain",
+  "symptom_severity": 2
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22332"
+  },
+  "symptom": "altered_sensorium",
+  "symptom_severity": 2
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22333"
+  },
+  "symptom": "red_spots_over_body",
+  "symptom_severity": 3
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22334"
+  },
+  "symptom": "belly_pain",
+  "symptom_severity": 4
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22335"
+  },
+  "symptom": "abnormal_menstruation",
+  "symptom_severity": 6
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22336"
+  },
+  "symptom": "dischromic_patches",
+  "symptom_severity": 6
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22337"
+  },
+  "symptom": "watering_from_eyes",
+  "symptom_severity": 4
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22338"
+  },
+  "symptom": "increased_appetite",
+  "symptom_severity": 5
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22339"
+  },
+  "symptom": "polyuria",
+  "symptom_severity": 4
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb2233a"
+  },
+  "symptom": "family_history",
+  "symptom_severity": 5
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb2233b"
+  },
+  "symptom": "mucoid_sputum",
+  "symptom_severity": 4
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb2233c"
+  },
+  "symptom": "rusty_sputum",
+  "symptom_severity": 4
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb2233d"
+  },
+  "symptom": "lack_of_concentration",
+  "symptom_severity": 3
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb2233e"
+  },
+  "symptom": "visual_disturbances",
+  "symptom_severity": 3
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb2233f"
+  },
+  "symptom": "receiving_blood_transfusion",
+  "symptom_severity": 5
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22340"
+  },
+  "symptom": "receiving_unsterile_injections",
+  "symptom_severity": 2
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22341"
+  },
+  "symptom": "coma",
+  "symptom_severity": 7
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22342"
+  },
+  "symptom": "stomach_bleeding",
+  "symptom_severity": 6
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22343"
+  },
+  "symptom": "distention_of_abdomen",
+  "symptom_severity": 4
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22344"
+  },
+  "symptom": "history_of_alcohol_consumption",
+  "symptom_severity": 5
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22345"
+  },
+  "symptom": "fluid_overload",
+  "symptom_severity": 4
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22346"
+  },
+  "symptom": "blood_in_sputum",
+  "symptom_severity": 5
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22347"
+  },
+  "symptom": "prominent_veins_on_calf",
+  "symptom_severity": 6
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22348"
+  },
+  "symptom": "palpitations",
+  "symptom_severity": 4
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22349"
+  },
+  "symptom": "painful_walking",
+  "symptom_severity": 2
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb2234a"
+  },
+  "symptom": "pus_filled_pimples",
+  "symptom_severity": 2
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb2234b"
+  },
+  "symptom": "blackheads",
+  "symptom_severity": 2
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb2234c"
+  },
+  "symptom": "scurring",
+  "symptom_severity": 2
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb2234d"
+  },
+  "symptom": "skin_peeling",
+  "symptom_severity": 3
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb2234e"
+  },
+  "symptom": "silver_like_dusting",
+  "symptom_severity": 2
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb2234f"
+  },
+  "symptom": "small_dents_in_nails",
+  "symptom_severity": 2
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22350"
+  },
+  "symptom": "inflammatory_nails",
+  "symptom_severity": 2
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22351"
+  },
+  "symptom": "blister",
+  "symptom_severity": 4
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22352"
+  },
+  "symptom": "red_sore_around_nose",
+  "symptom_severity": 2
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22353"
+  },
+  "symptom": "yellow_crust_ooze",
+  "symptom_severity": 3
+},
+{
+  "_id": {
+    "$oid": "663b4988e2f6c75c6cb22354"
+  }
+}]
