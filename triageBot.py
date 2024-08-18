@@ -1,6 +1,16 @@
+import numpy
+import tensorflow as tf
+from tensorflow import keras
+import random
+import json
+import nltk
+from nltk.stem.lancaster import LancasterStemmer
+import mysql.connector
+from mysql.connector import Error
 from googletrans import Translator, LANGUAGES
  
 class TriageBot:
+    """Some initial settings and configurations"""
     body_areas = ["ear", "nose", "throat", "head"]
     potential_illnesses = {
         "ear": "The ear can have many conditions from tinnitus, ear wax build-up, or hearing loss from age.",
@@ -8,10 +18,39 @@ class TriageBot:
         "throat": "The throat can cross illnesses from colds, allergies, tonsillitus, to sore throat and laryngitus.",
         "head": "A headache or fever may come with other illnesses, and be focused on pain in the temples or a fever."
     }
+    connection = None
     
     def __init__(self, name):
         self.name = name
     
+    def mysql_db_connection(self):
+        try:
+            self.connection = mysql.connector.connect(host='localhost', database='diagnosebot', user='michael', password='F0xxyH4rl0tsC00l!')
+            if self.connection.is_connected():
+                db_info = self.connection.get_server_info()
+                print("Connected to MySQL Server version ", db_info)
+                cursor = self.connection.cursor()
+                cursor.execute("select SymptomName from symptom;")
+                records = cursor.fetchall()
+                for name in records:
+                    print("You may use: ", name)
+
+        except Error as e:
+            print("Error while connecting to MySQL", e)
+        finally:
+            if self.connection.is_connected():
+                print("MySQL connection is connected.")
+                cursor.close()
+    
+    def close_connections(self):
+        """Closes any lingering connections"""
+        try:
+            if self.connection.is_connected():
+                self.connection.close()
+                print("MySQL connection is closed.")
+        except Error as e:
+            print("Error while connecting to MySQL to close", e)
+
     def collect_symptoms(self):
         """Collects a Users Symptoms and returns them as a list"""
         print("Please let us know your symptoms.  Add each one so they can be checked for a diagnosis later.")
@@ -31,7 +70,7 @@ class TriageBot:
     def triage_welcome(self):
         """Prompts for what area of the body a person is feeling sick from"""
         symptom_list = []
-        print("You can check for illnesses in the following areas:")
+        print("You can check for the following illnesses:")
         print(', '.join(self.body_areas))
         body_check = input("Please enter the body area you are feeling sick in: ")
         if body_check in self.body_areas:
@@ -49,6 +88,7 @@ class TriageBot:
     def chat(self):
         """Main entry function"""
         # Intro and prompt for function to perform
+        self.mysql_db_connection()
         while True:
             print(f"Welcome to {self.name} to help you with your health needs.")
             user_input = input("Would you like a diagnosis? (triage / bye): ")
@@ -56,6 +96,7 @@ class TriageBot:
             if user_input == "triage":
                 self.triage_welcome()
             elif user_input.lower() == "bye":
+                self.close_connections()
                 print("Goodbye!")
                 break
             else:
