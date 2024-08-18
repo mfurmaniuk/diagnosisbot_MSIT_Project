@@ -8,8 +8,8 @@
 #run this command in python console to download punkt
 
 import numpy
-import tensorflow
-import tf_keras as keras
+import tensorflow as tf
+from tensorflow import keras
 import random	
 import json	
 import nltk
@@ -70,7 +70,7 @@ output = numpy.array(output)
 
 model = keras.Sequential()
 
-model.add(keras.layers.InputLayer(input_shape=(len(training[0]))))
+model.add(keras.layers.InputLayer(shape=(len(training[0]),)))
 model.add(keras.layers.Dense(8))
 model.add(keras.layers.Dense(8))
 model.add(keras.layers.Dense(8))
