@@ -7,13 +7,18 @@
 #nltk.download('punkt')
 #run this command in python console to download punkt
 
+# Settings needed to run TensorFlow without warnings
+import os
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+# Library imports
 import numpy
 import tensorflow as tf
 from tensorflow import keras
 import random	
 import json	
 import nltk
-from nltk.stem.lancaster import LancasterStemmer	
+from nltk.stem.lancaster import LancasterStemmer
+import random
 
 with open("intents.json") as file:	
     data = json.load(file)	  
@@ -23,7 +28,10 @@ stemmer = LancasterStemmer()
 words = []
 labels = []	
 docs_x = []
-docs_y = []	
+docs_y = []
+context = {}
+ERROR_THRESHOLD = 0.25
+botName = "TriageBot"	
 
 for intent in data["intents"]:
     for pattern in intent["patterns"]:	    
@@ -59,8 +67,7 @@ for x, doc in enumerate(docs_x):
     
     training.append(bag)	 
     output.append(output_row)	
-    
-    
+
 training = numpy.array(training)
 output = numpy.array(output)	
 
@@ -68,13 +75,13 @@ output = numpy.array(output)
 
 #creating the neural net	
 
-model = keras.Sequential()
+model = tf.keras.Sequential()
 
-model.add(keras.layers.InputLayer(shape=(len(training[0]),)))
-model.add(keras.layers.Dense(8))
-model.add(keras.layers.Dense(8))
-model.add(keras.layers.Dense(8))
-model.add(keras.layers.Dense(len(output[0]), activation="softmax"))
+model.add(tf.keras.layers.InputLayer(shape=(len(training[0]),)))
+model.add(tf.keras.layers.Dense(8))
+model.add(tf.keras.layers.Dense(8))
+model.add(tf.keras.layers.Dense(8))
+model.add(tf.keras.layers.Dense(len(output[0]), activation="softmax"))
 
 #run this command to get the summary of the model	
 #model.summary()
@@ -102,14 +109,63 @@ def bag_of_words(s, words):
             if w == se:	       
                 bag[i] = 1	                
                 	                
-    return numpy.array([bag])	  
-  	  
-def chat():	
-        print("Start talking with the bot (type /quit to stop and /retrain to train again)!")	       
+    return numpy.array([bag])
+
+def classify(sentence):
+    # generate probabilities from the model
+    results = model.predict([bag_of_words(sentence, words)])[0]
+    # filter out predictions below a threshold
+    results = [[i,r] for i,r in enumerate(results) if r>ERROR_THRESHOLD]
+    # sort by strength of probability
+    results.sort(key=lambda x: x[1], reverse=True)
+    return_list = []
+    for r in results:
+        return_list.append((labels[r[0]], r[1]))
+    # return tuple of intent and probability
+    return return_list
+
+def response(sentence, userID='123', show_details=False):
+    results = classify(sentence)
+    # if we have a classification then find the matching intent tag
+    if results:
+        # loop as long as there are matches to process
+        while results:
+            for i in data['intents']:
+                # find a tag matching the first result
+                if i['tag'] == results[0][0]:
+                    # set context for this intent if necessary
+                    if 'context_set' in i:
+                        if show_details: print ('context:', i['context_set'])
+                        context[userID] = i['context_set']
+
+                    # check if this intent is contextual and applies to this user's conversation
+                    if not 'context_filter' in i or \
+                        (userID in context and 'context_filter' in i and i['context_filter'] == context[userID]):
+                        if show_details: print ('tag:', i['tag'])
+                        # a random response from the intent
+                        return print(random.choice(i['responses']))
+            results.pop(0)
+    else:	                
+        print("Sorry, I don't understand that!")
+    try:	                    
+        with open('exceptions.txt') as f:	                        
+            if sentence not in f.read():	                            
+                with open('exceptions.txt', 'a') as f:	                             
+                    f.write(f'{sentence}  Predicted category: {i["tag"]}\n')	                                
+    except:	                  
+        file = open('exceptions.txt', 'x')                        
+        with open('exceptions.txt') as f:	                        
+            if sentence not in f.read():	                            
+                with open('exceptions.txt', 'a') as f:	                            
+                    f.write(f'{sentence}  (Predicted category: {i["tag"]})\n')
+         	  
+def chat():
+        print(f"Welcome to {botName} to help you with your health needs.")
+        print("Please let us know how you are feeling (type /bye to stop or /retrain to train again)!")	       
         while True:	       
-            inp = input("You: ")	
+            inp = input("Patient: ")	
             
-            if inp.lower() == "/quit":	            
+            if inp.lower() == "/bye":	            
                 break	             
                 exit()	 
                 
@@ -117,30 +173,7 @@ def chat():
                 train()	               
                 chat()	 
                 
-            else:	            
-                results = model.predict([bag_of_words(inp, words)])[0]	                
-               	               
-                results_index = numpy.argmax(results)	                
-                tag = labels[results_index]	                
-                if results[results_index] > 0.9:	               
-                    for tg in data["intents"]:	                  
-                        if tg["tag"] == tag:	                      
-                            responses = tg["responses"]	                            
-                    print(f"{random.choice(responses)}   (Category: {tag})")
-                    
-                else:	                
-                    print("Please rephrase it!")
-                    try:	                    
-                        with open('exceptions.txt') as f:	                        
-                            if inp not in f.read():	                            
-                                with open('exceptions.txt', 'a') as f:	                             
-                                    f.write(f'{inp}  (Predicted category: {tag})\n')	                                
-                    except:	                  
-                        file = open('exceptions.txt', 'x')                        
-                        with open('exceptions.txt') as f:	                        
-                            if inp not in f.read():	                            
-                                with open('exceptions.txt', 'a') as f:	                            
-                                    f.write(f'{inp}  (Predicted category: {tag})\n')
-
+            else:
+                response(inp)         
 
 chat()                	

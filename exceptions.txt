@@ -1,1 +1,7 @@
 /bye  (Predicted category: goodbye)
+can you help me  (Predicted category: greeting)
+yes i am  (Predicted category: goodbye)
+Should I see a doctor  (Predicted category: doctor)
+I feel sick  Predicted category: greeting
+I may need a doctor  Predicted category: greeting
+Hello  Predicted category: greeting
