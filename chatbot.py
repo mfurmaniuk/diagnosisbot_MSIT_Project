@@ -7,13 +7,18 @@
 #nltk.download('punkt')
 #run this command in python console to download punkt
 
+# Settings needed to run TensorFlow without warnings
+import os
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+# Library imports
 import numpy
 import tensorflow as tf
 from tensorflow import keras
 import random	
 import json	
 import nltk
-from nltk.stem.lancaster import LancasterStemmer	
+from nltk.stem.lancaster import LancasterStemmer
+import random
 
 with open("intents.json") as file:	
     data = json.load(file)	  
@@ -24,6 +29,9 @@ words = []
 labels = []	
 docs_x = []
 docs_y = []	
+conversation_history = []
+ERROR_THRESHOLD = 0.25
+botName = "TriageBot"
 
 for intent in data["intents"]:
     for pattern in intent["patterns"]:	    
@@ -103,22 +111,43 @@ def bag_of_words(s, words):
                 bag[i] = 1	                
                 	                
     return numpy.array([bag])	  
-  	  
-def chat():	
-        print("Start talking with the bot (type /quit to stop and /retrain to train again)!")	       
-        while True:	       
-            inp = input("You: ")	
+
+def update_history(user_input, bot_response):
+    conversation_history.append({'user': user_input, 'bot': bot_response})
+    # Limit history length if needed
+    if len(conversation_history) > 10:
+        conversation_history.pop(0)
+
+def get_contextual_input(user_input):
+    # Combine conversation history into a single string (or any other way you prefer)
+    history_context = " ".join([f"User: {entry['user']} Bot: {entry['bot']}" for entry in conversation_history])
+    return f"{history_context} User: {user_input}"
+
+def log_exception(user_input, predicted_tag):
+    try:
+        with open('exceptions.txt', 'a') as f:
+            f.write(f'{user_input}  (Predicted category: {predicted_tag})\n')
+    except FileNotFoundError:
+        with open('exceptions.txt', 'w') as f:
+            f.write(f'{user_input}  (Predicted category: {predicted_tag})\n')
             
-            if inp.lower() == "/quit":	            
+def chat():	
+        print(f"Welcome to {botName} to help you with your health needs.")
+        print("Please let us know how you are feeling (type /bye to stop or /retrain to train again)!")	   	       
+        while True:	       
+            inp = input("Patient: ")	
+            
+            if inp.lower() == "/bye":	            
                 break	             
                 exit()	 
                 
             elif inp.lower() == "/retrain":	          
                 train()	               
-                chat()	 
+                continue	 
                 
-            else:	            
-                results = model.predict([bag_of_words(inp, words)])[0]	                
+            else:
+                contextual_input = get_contextual_input(inp)           
+                results = model.predict([bag_of_words(contextual_input, words)])[0]	                
                	               
                 results_index = numpy.argmax(results)	                
                 tag = labels[results_index]	                
@@ -126,21 +155,12 @@ def chat():
                     for tg in data["intents"]:	                  
                         if tg["tag"] == tag:	                      
                             responses = tg["responses"]	                            
-                    print(f"{random.choice(responses)}   (Category: {tag})")
+                    response = random.choice(responses)
+                    print(f"{response} (Category: {tag})")
+                    update_history(inp, response)
                     
                 else:	                
-                    print("Please rephrase it!")
-                    try:	                    
-                        with open('exceptions.txt') as f:	                        
-                            if inp not in f.read():	                            
-                                with open('exceptions.txt', 'a') as f:	                             
-                                    f.write(f'{inp}  (Predicted category: {tag})\n')	                                
-                    except:	                  
-                        file = open('exceptions.txt', 'x')                        
-                        with open('exceptions.txt') as f:	                        
-                            if inp not in f.read():	                            
-                                with open('exceptions.txt', 'a') as f:	                            
-                                    f.write(f'{inp}  (Predicted category: {tag})\n')
-
+                    print("I didn't understand you!")
+                    log_exception(inp, tag)
 
 chat()                	
