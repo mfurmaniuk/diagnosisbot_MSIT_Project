@@ -1,0 +1,526 @@
+[
+  {
+    "SymptomName": "itching",
+    "SymDesc": "Scratching of the skin"
+  },
+  {
+    "SymptomName": "skin_rash",
+    "SymDesc": "Redness of the skin"
+  },
+  {
+    "SymptomName": "nodal_skin_eruptions",
+    "SymDesc": "nodal_skin_eruptions"
+  },
+  {
+    "SymptomName": "continuous_sneezing",
+    "SymDesc": "Sneezing that is continual"
+  },
+  {
+    "SymptomName": "shivering",
+    "SymDesc": "Slight feeling of cold"
+  },
+  {
+    "SymptomName": "chills",
+    "SymDesc": "Continual feeling of cold"
+  },
+  {
+    "SymptomName": "joint_pain",
+    "SymDesc": "Pain in the joints"
+  },
+  {
+    "SymptomName": "stomach_pain",
+    "SymDesc": "Pain in the stomach area"
+  },
+  {
+    "SymptomName": "acidity",
+    "SymDesc": "acidity"
+  },
+  {
+    "SymptomName": "ulcers_on_tongue",
+    "SymDesc": "ulcers_on_tongue"
+  },
+  {
+    "SymptomName": "muscle_wasting",
+    "SymDesc": "Loss of muscle mass"
+  },
+  {
+    "SymptomName": "vomiting",
+    "SymDesc": "Throwing up of stomach contents"
+  },
+  {
+    "SymptomName": "burning_micturition",
+    "SymDesc": "burning_micturition"
+  },
+  {
+    "SymptomName": "spotting_urination",
+    "SymDesc": "spotting_urination"
+  },
+  {
+    "SymptomName": "fatigue",
+    "SymDesc": "Feeling of tiredness or no energy"
+  },
+  {
+    "SymptomName": "weight_gain",
+    "SymDesc": "Increase in body mass"
+  },
+  {
+    "SymptomName": "anxiety",
+    "SymDesc": "Feeling of anxiety"
+  },
+  {
+    "SymptomName": "cold_hands_and_feet",
+    "SymDesc": "Feeling of cold in extremities specifically the hands and feet"
+  },
+  {
+    "SymptomName": "mood_swings",
+    "SymDesc": "Constant emotional changes"
+  },
+  {
+    "SymptomName": "weight_loss",
+    "SymDesc": "Loss of body mass"
+  },
+  {
+    "SymptomName": "restlessness",
+    "SymDesc": "Cannot be still or sleep"
+  },
+  {
+    "SymptomName": "lethargy",
+    "SymDesc": "Feeling of tiredness"
+  },
+  {
+    "SymptomName": "patches_in_throat",
+    "SymDesc": "patches_in_throat"
+  },
+  {
+    "SymptomName": "irregular_sugar_level",
+    "SymDesc": "Glucose level in blood changes constantly"
+  },
+  {
+    "SymptomName": "cough",
+    "SymDesc": "cough"
+  },
+  {
+    "SymptomName": "high_fever",
+    "SymDesc": "Body temperature above 101F or 38C"
+  },
+  {
+    "SymptomName": "sunken_eyes",
+    "SymDesc": "Sunken eyes"
+  },
+  {
+    "SymptomName": "breathlessness",
+    "SymDesc": "Inability to breathe normally"
+  },
+  {
+    "SymptomName": "sweating",
+    "SymDesc": "Body is constantly expelling moisture"
+  },
+  {
+    "SymptomName": "dehydration",
+    "SymDesc": "Body is not at optimal level of water intake"
+  },
+  {
+    "SymptomName": "indigestion",
+    "SymDesc": "Abdominal aches and pains"
+  },
+  {
+    "SymptomName": "headache",
+    "SymDesc": "Pain in the head"
+  },
+  {
+    "SymptomName": "yellowish_skin",
+    "SymDesc": "Skin is colored yellow"
+  },
+  {
+    "SymptomName": "dark_urine",
+    "SymDesc": "Urine is a dark yellow or other color"
+  },
+  {
+    "SymptomName": "nausea",
+    "SymDesc": "Uneasy feeling in the stomach"
+  },
+  {
+    "SymptomName": "loss_of_appetite",
+    "SymDesc": "Loss of appetite"
+  },
+  {
+    "SymptomName": "pain_behind_the_eyes",
+    "SymDesc": "Pain behind the eyes"
+  },
+  {
+    "SymptomName": "back_pain",
+    "SymDesc": "Pain in the back"
+  },
+  {
+    "SymptomName": "constipation",
+    "SymDesc": "constipation"
+  },
+  {
+    "SymptomName": "abdominal_pain",
+    "SymDesc": "Abdominal pain"
+  },
+  {
+    "SymptomName": "diarrhoea",
+    "SymDesc": "Diarrhoea"
+  },
+  {
+    "SymptomName": "mild_fever",
+    "SymDesc": "Body temperature slightly elevated to 100F or 38C"
+  },
+  {
+    "SymptomName": "yellow_urine",
+    "SymDesc": "Urine colored yellow"
+  },
+  {
+    "SymptomName": "yellowing_of_eyes",
+    "SymDesc": "Eyes have a yellow color"
+  },
+  {
+    "SymptomName": "acute_liver_failure",
+    "SymDesc": "Acute Liver failure"
+  },
+  {
+    "SymptomName": "fluid_overload",
+    "SymDesc": "Body has accumulated excess liquids"
+  },
+  {
+    "SymptomName": "swelling_of_stomach",
+    "SymDesc": "Swelling of the abdomional area"
+  },
+  {
+    "SymptomName": "swelled_lymph_nodes",
+    "SymDesc": "Swelled lymph nodes"
+  },
+  {
+    "SymptomName": "malaise",
+    "SymDesc": "Malaise"
+  },
+  {
+    "SymptomName": "blurred_and_distorted_vision",
+    "SymDesc": "Unclear vision"
+  },
+  {
+    "SymptomName": "phlegm",
+    "SymDesc": "Phlegm"
+  },
+  {
+    "SymptomName": "throat_irritation",
+    "SymDesc": "Soreness of the throat"
+  },
+  {
+    "SymptomName": "redness_of_eyes",
+    "SymDesc": "Redness of the eyes"
+  },
+  {
+    "SymptomName": "sinus_pressure",
+    "SymDesc": "Pressure of the sinus area"
+  },
+  {
+    "SymptomName": "runny_nose",
+    "SymDesc": "Runny nose"
+  },
+  {
+    "SymptomName": "congestion",
+    "SymDesc": "Blocked or filled sinus cavity"
+  },
+  {
+    "SymptomName": "chest_pain",
+    "SymDesc": "Chest pain"
+  },
+  {
+    "SymptomName": "weakness_in_limbs",
+    "SymDesc": "Weakness in limbs"
+  },
+  {
+    "SymptomName": "fast_heart_rate",
+    "SymDesc": "Excess heart rate"
+  },
+  {
+    "SymptomName": "pain_during_bowel_movements",
+    "SymDesc": "Pain during bowel movements"
+  },
+  {
+    "SymptomName": "pain_in_anal_region",
+    "SymDesc": "Pain in anal region"
+  },
+  {
+    "SymptomName": "bloody_stool",
+    "SymDesc": "Bloody stool"
+  },
+  {
+    "SymptomName": "irritation_in_anus",
+    "SymDesc": "Irritation in anus"
+  },
+  {
+    "SymptomName": "neck_pain",
+    "SymDesc": "Neck pain"
+  },
+  {
+    "SymptomName": "dizziness",
+    "SymDesc": "Dizziness"
+  },
+  {
+    "SymptomName": "cramps",
+    "SymDesc": "Muscle spasms"
+  },
+  {
+    "SymptomName": "bruising",
+    "SymDesc": "Bruising"
+  },
+  {
+    "SymptomName": "obesity",
+    "SymDesc": "Body mass above general standards for height"
+  },
+  {
+    "SymptomName": "swollen_legs",
+    "SymDesc": "Swollen legs"
+  },
+  {
+    "SymptomName": "swollen_blood_vessels",
+    "SymDesc": "Swollen blood vessels"
+  },
+  {
+    "SymptomName": "puffy_face_and_eyes",
+    "SymDesc": "Puffy face and eyes"
+  },
+  {
+    "SymptomName": "enlarged_thyroid",
+    "SymDesc": "Enlarged thyroid"
+  },
+  {
+    "SymptomName": "brittle_nalls",
+    "SymDesc": "Brittle nails"
+  },
+  {
+    "SymptomName": "swollen_extremities",
+    "SymDesc": "Swollen extremities"
+  },
+  {
+    "SymptomName": "excessive_hunger",
+    "SymDesc": "Excessive hunger"
+  },
+  {
+    "SymptomName": "extra_marital_contacts",
+    "SymDesc": "Extra-marital contacts"
+  },
+  {
+    "SymptomName": "drying_and_tingling_lips",
+    "SymDesc": "Drying and tingling lips"
+  },
+  {
+    "SymptomName": "slurred_speech",
+    "SymDesc": "Slurred speech"
+  },
+  {
+    "SymptomName": "knee_pain",
+    "SymDesc": "Knee pain"
+  },
+  {
+    "SymptomName": "hip_joint_pain",
+    "SymDesc": "Hip joint pain"
+  },
+  {
+    "SymptomName": "muscle_weakness",
+    "SymDesc": "Muscle weakness"
+  },
+  {
+    "SymptomName": "stiff_neck",
+    "SymDesc": "Stiff neck"
+  },
+  {
+    "SymptomName": "swelling_joints",
+    "SymDesc": "Swelling joints"
+  },
+  {
+    "SymptomName": "movement_stiffness",
+    "SymDesc": "Movement stiffness"
+  },
+  {
+    "SymptomName": "spinning_movements",
+    "SymDesc": "Spinning movements"
+  },
+  {
+    "SymptomName": "loss_of_balance",
+    "SymDesc": "Loss of balance"
+  },
+  {
+    "SymptomName": "unsteadiness",
+    "SymDesc": "Unsteadiness"
+  },
+  {
+    "SymptomName": "weakness_of_one_body_side",
+    "SymDesc": "Weakness of one body side"
+  },
+  {
+    "SymptomName": "loss_of_smell",
+    "SymDesc": "Loss of smell"
+  },
+  {
+    "SymptomName": "bladder_discomfort",
+    "SymDesc": "Bladder discomfort"
+  },
+  {
+    "SymptomName": "foul_smell_of_uring",
+    "SymDesc": "Foul smell of uring"
+  },
+  {
+    "SymptomName": "continuous_smell_of_urine",
+    "SymDesc": "Continuous smell of urine"
+  },
+  {
+    "SymptomName": "passage_of_gases",
+    "SymDesc": "Passage of gases"
+  },
+  {
+    "SymptomName": "internal_itching",
+    "SymDesc": "Internal itching"
+  },
+  {
+    "SymptomName": "toxic_look_typhos",
+    "SymDesc": "Toxic look typhos"
+  },
+  {
+    "SymptomName": "depression",
+    "SymDesc": "Depression"
+  },
+  {
+    "SymptomName": "irritability",
+    "SymDesc": "Irritability"
+  },
+  {
+    "SymptomName": "muscle_pain",
+    "SymDesc": "Muscle pain"
+  },
+  {
+    "SymptomName": "altered_sensorium",
+    "SymDesc": "Altered sensorium"
+  },
+  {
+    "SymptomName": "red_spots_over_body",
+    "SymDesc": "Red spots over body"
+  },
+  {
+    "SymptomName": "belly_pain",
+    "SymDesc": "Belly pain"
+  },
+  {
+    "SymptomName": "abnormal_menstruation",
+    "SymDesc": "Abnormal menstruation"
+  },
+  {
+    "SymptomName": "dischromic_patches",
+    "SymDesc": "Dischromic patches"
+  },
+  {
+    "SymptomName": "watering_from_eyes",
+    "SymDesc": "Excess tearing in the eyes"
+  },
+  {
+    "SymptomName": "increased_appetite",
+    "SymDesc": "Increased appetite"
+  },
+  {
+    "SymptomName": "polyuria",
+    "SymDesc": "Polyuria"
+  },
+  {
+    "SymptomName": "family_history",
+    "SymDesc": "Family history"
+  },
+  {
+    "SymptomName": "mucoid_sputum",
+    "SymDesc": "Mucoid sputum"
+  },
+  {
+    "SymptomName": "rusty_sputum",
+    "SymDesc": "Rusty sputum"
+  },
+  {
+    "SymptomName": "lack_of_concentration",
+    "SymDesc": "Lack of concentration"
+  },
+  {
+    "SymptomName": "visual_disturbances",
+    "SymDesc": "Visual disturbances"
+  },
+  {
+    "SymptomName": "receiving_blood_transfusion",
+    "SymDesc": "Receiving blood transfusion"
+  },
+  {
+    "SymptomName": "coma",
+    "SymDesc": "Coma"
+  },
+  {
+    "SymptomName": "stomach_bleeding",
+    "SymDesc": "Stomach bleeding"
+  },
+  {
+    "SymptomName": "distention_of_abdomen",
+    "SymDesc": "Distention of abdomen"
+  },
+  {
+    "SymptomName": "history_of_alcohol_consumption",
+    "SymDesc": "History of alcohol consumption"
+  },
+  {
+    "SymptomName": "fluid_overload",
+    "SymDesc": "Fluid overload"
+  },
+  {
+    "SymptomName": "blood_in_sputum",
+    "SymDesc": "Blood in sputum"
+  },
+  {
+    "SymptomName": "prominent_veins_on_calf",
+    "SymDesc": "Prominent veins on calf"
+  },
+  {
+    "SymptomName": "palpations",
+    "SymDesc": "Palpations"
+  },
+  {
+    "SymptomName": "painful_walking",
+    "SymDesc": "Painful walking"
+  },
+  {
+    "SymptomName": "pus_filled_pimples",
+    "SymDesc": "Pus filled pimples"
+  },
+  {
+    "SymptomName": "blackheads",
+    "SymDesc": "Blackheads"
+  },
+  {
+    "SymptomName": "scurring",
+    "SymDesc": "Scurring"
+  },
+  {
+    "SymptomName": "skin_peeling",
+    "SymDesc": "Skin peeling"
+  },
+  {
+    "SymptomName": "silver_like_dusting",
+    "SymDesc": "Silver like dusting"
+  },
+  {
+    "SymptomName": "small_dents_in_nails",
+    "SymDesc": "Small dents in nails"
+  },
+  {
+    "SymptomName": "inflammatory_nails",
+    "SymDesc": "Inflammatory nails"
+  },
+  {
+    "SymptomName": "blister",
+    "SymDesc": "Blister"
+  },
+  {
+    "SymptomName": "red_sore_around_nose",
+    "SymDesc": "Red sore around nose"
+  },
+  {
+    "SymptomName": "yellow_crust_ooze",
+    "SymDesc": "Yellow crust ooze"
+  }
+]
