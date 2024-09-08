@@ -11,6 +11,7 @@ import nltk
 from nltk.stem.lancaster import LancasterStemmer
 import tensorflow as tf
 from tensorflow import keras
+from keras.api.callbacks import EarlyStopping
 import mysql.connector
 from mysql.connector import Error
 
@@ -20,11 +21,7 @@ os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 # Initialize the stemmer
 stemmer = LancasterStemmer()
 
-# Add to existing intents data, but needs formatting
-# data["intents"].extend(disease_data)
-
-# Add to existing intents data, but needs formatting
-# data["intents"].extend(symptom_data)
+conversation_history = []
     
 # Load data
 def load_data():
@@ -53,9 +50,6 @@ def preprocess_data(data):
     labels = sorted(labels)
 
     return words, labels, docs_x, docs_y
-        
-conversation_history = []
-ERROR_THRESHOLD = 0.25
 
 # Create training data
 def create_training_data(words, labels, docs_x, docs_y):
@@ -69,7 +63,6 @@ def create_training_data(words, labels, docs_x, docs_y):
         for i,w in enumerate(words):	    
             if w in wrds:	        
                 bag[i] = 1
-                
         output_row = out_empty[:]	    
         output_row[labels.index(docs_y[docs_x.index(doc)])] = 1	 
         training.append(bag)	 
@@ -82,10 +75,11 @@ def create_model(input_shape, output_shape):
     # Creating the neural net	
     model = keras.Sequential()
     model.add(keras.layers.InputLayer(shape=(input_shape,)))
-    model.add(keras.layers.Dense(8))
-    model.add(keras.layers.Dense(8))
-    model.add(keras.layers.Dense(8))
-    model.add(keras.layers.Dropout(0.1))
+    model.add(keras.layers.Dense(128, activation='relu'))
+    model.add(keras.layers.Dropout(0.5))
+    model.add(keras.layers.Dense(64, activation='relu'))
+    model.add(keras.layers.Dropout(0.5))
+    model.add(keras.layers.Dense(32, activation='relu'))
     model.add(keras.layers.Dense(output_shape, activation="softmax"))
     model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])	      
     # Uncomment and run this command to get the summary of the model	
@@ -93,7 +87,10 @@ def create_model(input_shape, output_shape):
     return model
 
 def train_model(model, training, output):
-    model.fit(training, output, epochs=500, batch_size=256)	  
+    # early_stopping = EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
+    # model.fit(training, output, epochs=500, batch_size=256, validation_split=0.1, callbacks=[early_stopping])	  
+   
+    model.fit(training, output, epochs=500, batch_size=256, validation_split=0.1)	  
     model.save('model.h5')
 
 def load_or_train_model(training, output):
@@ -134,6 +131,46 @@ def update_history(conversation_history, user_input, bot_response):
     if len(conversation_history) > 10:
         conversation_history.pop(0)
 
+def add_intent(tag, patterns, responses):
+    # Load existing intents
+    with open("intents.json", "r") as file:
+        data = json.load(file)
+
+    # Check if the tag already exists
+    for intent in data["intents"]:
+        if intent["tag"] == tag:
+            print(f"Intent with tag '{tag}' already exists.")
+            return
+
+    # Add new intent
+    new_intent = {"tag": tag, "patterns": patterns, "responses": responses}
+    data["intents"].append(new_intent)
+
+    # Save the updated data back to the file
+    with open("intents.json", "w") as file:
+        json.dump(data, file, indent=4)
+
+    print(f"Added new intent: {tag}")
+
+def remove_intent(tag):
+    # Load existing intents
+    with open("intents.json", "r") as file:
+        data = json.load(file)
+
+    # Find and remove the intent
+    new_intents = [intent for intent in data["intents"] if intent["tag"] != tag]
+    if len(new_intents) == len(data["intents"]):
+        print(f"No intent with tag '{tag}' found.")
+        return
+
+    data["intents"] = new_intents
+
+    # Save the updated data back to the file
+    with open("intents.json", "w") as file:
+        json.dump(data, file, indent=4)
+
+    print(f"Removed intent with tag: {tag}")
+
 def get_contextual_input(conversation_history, user_input):
     # Combine conversation history into a single string (or any other way you prefer)
     history_context = " ".join([f"User: {entry['user']} Bot: {entry['bot']}" for entry in conversation_history])
@@ -148,6 +185,8 @@ def log_exception(user_input, predicted_tag):
             f.write(f'{user_input}  (Predicted category: {predicted_tag})\n')
 
 def mysql_db_connection():
+    # Still maintaining connections but had problems with model not getting data in right format for training
+    # Using JSON structures until that point and integrating them as a POC.
     try:
         connection = mysql.connector.connect(host='localhost', database='diagnosebot', user='michael', password='F0xxyH4rl0tsC00l!')
         if connection.is_connected():
@@ -172,6 +211,7 @@ def close_db_connection(connection):
 def chat(model, words, labels, data, disease_data, symptom_data):	
     print(f"Welcome to TriageBot to help you with your health needs.")
     print("Please let us know how you are feeling (type /bye to stop or /retrain to train again)!")
+    print("You may also /add_intent or /remove_intent to be able to update the base data.")
     connection, cursor = mysql_db_connection()  	       
     while True:	       
         inp = input("Patient: ")	
@@ -180,9 +220,37 @@ def chat(model, words, labels, data, disease_data, symptom_data):
             close_db_connection(connection)
             print("Goodbye!")
             break	             	 
-        elif inp.lower() == "/retrain":	          
+        elif inp.lower() == "/retrain":
+            data, disease_data, symptom_data = load_data()
+            words, labels, docs_x, docs_y = preprocess_data(data)      
             training, output = create_training_data(words, labels, docs_x, docs_y)
             model = load_or_train_model(training, output)
+            continue
+        elif inp.lower().startswith("/add_intent"):
+            parts = inp.split('|')
+            if len(parts) != 4:
+                print("Usage: /add_intent|tag|pattern1,pattern2|response1,response2")
+                continue
+            _, tag, patterns, responses = parts
+            patterns = patterns.split(',')
+            responses = responses.split(',')
+            add_intent(tag, patterns, responses)
+            data, disease_data, symptom_data = load_data()  # Reload data after modification
+            words, labels, docs_x, docs_y = preprocess_data(data)  # Reprocess data
+            training, output = create_training_data(words, labels, docs_x, docs_y)  # Recreate training data
+            model = load_or_train_model(training, output)  # Reload model
+            continue
+        elif inp.lower().startswith("/remove_intent"):
+            parts = inp.split('|')
+            if len(parts) != 2:
+                print("Usage: /remove_intent|tag")
+                continue
+            _, tag = parts
+            remove_intent(tag)
+            data, disease_data, symptom_data = load_data()  # Reload data after modification
+            words, labels, docs_x, docs_y = preprocess_data(data)  # Reprocess data
+            training, output = create_training_data(words, labels, docs_x, docs_y)  # Recreate training data
+            model = load_or_train_model(training, output)  # Reload model
             continue
         else:
             contextual_input = get_contextual_input(conversation_history, inp)           
