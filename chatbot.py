@@ -15,6 +15,7 @@ from keras.api.callbacks import EarlyStopping
 import mysql.connector
 from mysql.connector import Error
 
+
 # Settings needed to run TensorFlow without warnings
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 
@@ -44,7 +45,7 @@ def preprocess_data(data):
             docs_y.append(intent["tag"])        
         if intent["tag"] not in labels:	    
             labels.append(intent["tag"])
-
+            
     words = [stemmer.stem(w.lower()) for w in words if w != ("?" or "!")]
     words = sorted(list(set(words)))	
     labels = sorted(labels)
