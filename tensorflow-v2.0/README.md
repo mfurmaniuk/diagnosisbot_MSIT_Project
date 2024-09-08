@@ -10,6 +10,5 @@ Requirements:<br>
 
 NOTE: This json dataset is taken from the internet, credits to the creator
 
-# C:/Users/mfurm/AppData/Local/Microsoft/WindowsApps/python3.10.exe "D:/Program Files/JetBrains/PyCharm 242.18071.12/plugins/python/helpers/packaging_tool.py" install tensorflow==2.17.0
-
-(nltk.download('punkt')) C:/Users/mfurm/AppData/Local/Microsoft/WindowsApps/python3.10.exe -c 'import nltk; nltk.download("punkt")'
+(nltk.download('punkt')) 
+C:/Users/mfurm/AppData/Local/Microsoft/WindowsApps/python3.10.exe -c 'import nltk; nltk.download("punkt")'
