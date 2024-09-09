@@ -3,18 +3,17 @@
 #   by VISHANK           #
 #------------------------#
 
-import os
 import json	
-import random
-import numpy as np
 import nltk
 from nltk.stem.lancaster import LancasterStemmer
+import numpy as np
+import os
+import pandas as pd
+import random
 import tensorflow as tf
 from tensorflow import keras
-from keras.api.callbacks import EarlyStopping
 import mysql.connector
 from mysql.connector import Error
-
 
 # Settings needed to run TensorFlow without warnings
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
@@ -26,13 +25,14 @@ stemmer = LancasterStemmer()
 conversation_history = []
     
 # Load data
-def load_data(connection,cursor):
+def load_data():
+    connection, cursor = mysql_db_connection()
     with open("intents.json") as file:	
         data = json.load(file)
-    disease_data = get_disease_data(connection,cursor)
-    symptom_data = get_symptom_data(connection,cursor)
+    disease_data = get_disease_data()
+    symptom_data = get_symptom_data()
     return data, disease_data, symptom_data
-
+    
 # Preprocess data from intents file
 def preprocess_data(data):
     words, labels, docs_x, docs_y = [], [], [], []
@@ -48,7 +48,7 @@ def preprocess_data(data):
     words = sorted(list(set(words)))	
     labels = sorted(labels)
     return words, labels, docs_x, docs_y
-
+    
 # Create training data
 def create_training_data(words, labels, docs_x, docs_y):
     training = []	
@@ -66,9 +66,8 @@ def create_training_data(words, labels, docs_x, docs_y):
         output.append(output_row)	
     return np.array(training), np.array(output)	
 
-# Create and train the model
-def create_model(input_shape, output_shape):
-    # Creating the neural net	
+# Create the model
+def create_model(input_shape, output_shape):	
     model = keras.Sequential()
     model.add(keras.layers.InputLayer(shape=(input_shape,)))
     model.add(keras.layers.Dense(128, activation='relu'))
@@ -79,7 +78,7 @@ def create_model(input_shape, output_shape):
     model.add(keras.layers.Dense(output_shape, activation="softmax"))
     model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])	      
     # Uncomment and run this command to get the summary of the model	
-    #model.summary()
+    # model.summary()
     return model
 
 def train_model(model, training, output):
@@ -93,7 +92,7 @@ def load_or_train_model(training, output):
         model = create_model(len(training[0]), len(output[0]))
         train_model(model, training, output)
     return model
-
+    
 # Utility functions	    
 def bag_of_words(s, words):	
     bag = [0] * len(words)
@@ -124,38 +123,6 @@ def update_history(conversation_history, user_input, bot_response):
     if len(conversation_history) > 10:
         conversation_history.pop(0)
 
-def add_intent(tag, patterns, responses):
-    # Load existing intents
-    with open("intents.json", "r") as file:
-        data = json.load(file)
-    # Check if the tag already exists
-    for intent in data["intents"]:
-        if intent["tag"] == tag:
-            print(f"Intent with tag '{tag}' already exists.")
-            return
-    # Add new intent
-    new_intent = {"tag": tag, "patterns": patterns, "responses": responses}
-    data["intents"].append(new_intent)
-    # Save the updated data back to the file
-    with open("intents.json", "w") as file:
-        json.dump(data, file, indent=4)
-    print(f"Added new intent: {tag}")
-
-def remove_intent(tag):
-    # Load existing intents
-    with open("intents.json", "r") as file:
-        data = json.load(file)
-    # Find and remove the intent
-    new_intents = [intent for intent in data["intents"] if intent["tag"] != tag]
-    if len(new_intents) == len(data["intents"]):
-        print(f"No intent with tag '{tag}' found.")
-        return
-    data["intents"] = new_intents
-    # Save the updated data back to the file
-    with open("intents.json", "w") as file:
-        json.dump(data, file, indent=4)
-    print(f"Removed intent with tag: {tag}")
-
 def get_contextual_input(conversation_history, user_input):
     # Combine conversation history into a single string
     history_context = " ".join([f"User: {entry['user']} Bot: {entry['bot']}" for entry in conversation_history])
@@ -174,47 +141,85 @@ def mysql_db_connection():
         connection = mysql.connector.connect(host='localhost', database='diagnosebot', user='michael', password='F0xxyH4rl0tsC00l!')
         if connection.is_connected():
             db_info = connection.get_server_info()
-            print("Connected to MySQL Server version ", db_info)
-            cursor = connection.cursor()
+            # Uncomment for connection checking
+            # print("Connected to MySQL Server version ", db_info)
+            cursor = connection.cursor(buffered=True)
             return connection, cursor
     except Error as e:
         print("Error while connecting to MySQL", e)
     return None, None
 
-def get_symptom_data(connection, cursor):
-    try:
-        if connection.is_connected():
-            sym_query = ("select SymptomName,SymDesc from symptom")
-            return cursor.execute(sym_query)
-    except Error as e:
-        print("Symptom query error: ", e)
-
-def get_disease_data(connection, cursor):
-    try:
-        if connection.is_connected():
-            dis_query = ("select DiseaseName,Description from disease")
-            return cursor.execute(dis_query)
-    except Error as e:
-        print("Disease query error: ", e)
-
-def close_db_connection(connection):
+def close_db_connection(connection,cursor):
     """Closes any lingering connections"""
     try:
+        if cursor:
+            cursor.close()
         if connection.is_connected():
             connection.close()
             print("MySQL connection is closed.")
     except Error as e:
         print("Error while connecting to MySQL to close", e)
 
+def get_disease_data():
+    connection, cursor = mysql_db_connection()
+    try:
+        if connection.is_connected():
+            dis_query = ("select DiseaseName,Description from disease")
+            cursor.execute(dis_query)
+            disease_result = cursor.fetchall()
+            return disease_result
+    except Error as e:
+        print("Disease query error: ", e)
+    close_db_connection(connection, cursor)
+
+def get_symptom_data():
+    connection, cursor = mysql_db_connection()
+    try:
+        if connection.is_connected():
+            sym_query = ("select SymptomName,SymDesc from symptom")
+            cursor.execute(sym_query)
+            symptom_result = cursor.fetchall()
+            return symptom_result
+    except Error as e:
+        print("Symptom query error: ", e)
+    close_db_connection(connection, cursor)
+
+def add_disease(disease, description):
+    connection, cursor = mysql_db_connection()
+    try:
+        if connection.is_connected():
+            print("Adding new disease: ", disease)
+            # Create Insert statement then execute
+            disease_insert = ("""insert into disease(DiseaseName, Description) values(%s, %s)""")
+            result = cursor.execute(disease_insert, (disease, description))
+            connection.commit()
+            print(f"Added new disease: {disease}, ", result)
+    except Error as e:
+        print("Symptom query error: ", e)
+    close_db_connection(connection, cursor)
+
+def remove_disease(disease):
+    connection, cursor = mysql_db_connection()
+    try:
+        if connection.is_connected():
+            print("Removing disease: ", disease)
+            # Create Delete statement then execute
+            disease_delete = "delete from disease where DiseaseName = \"" + disease + "\""
+            result = cursor.execute(disease_delete)
+            connection.commit()
+            print(f"Removed disease: {disease}, ", result)
+    except Error as e:
+        print("Symptom query error: ", e)
+    close_db_connection(connection, cursor)
+    
 # Main chat function
-def chat(model, words, labels, data, disease_data, symptom_data,connection,cursor):	
+def chat(model, words, labels, data, disease_data, symptom_data):
     print(f"Welcome to TriageBot to help you with your health needs.")
     print("Please let us know how you are feeling (type /bye to stop or /retrain to train again)!")
-    print("You may also /add_intent or /remove_intent to be able to update the base data.")  	       
+    print("You may also /add_disease or /remove_disease to be able to update the base data.")  	       
     while True:	       
         inp = input("Patient: ")	
         if inp.lower() == "/bye":
-            close_db_connection(connection)
             print("Goodbye!")
             break	             	 
         elif inp.lower() == "/retrain":
@@ -223,27 +228,25 @@ def chat(model, words, labels, data, disease_data, symptom_data,connection,curso
             training, output = create_training_data(words, labels, docs_x, docs_y)
             model = load_or_train_model(training, output)
             continue
-        elif inp.lower().startswith("/add_intent"):
+        elif inp.lower().startswith("/add_disease"):
             parts = inp.split('|')
-            if len(parts) != 4:
-                print("Usage: /add_intent|tag|pattern1,pattern2|response1,response2")
+            if len(parts) != 3:
+                print("Usage: /add_disease|disease|description")
                 continue
-            _, tag, patterns, responses = parts
-            patterns = patterns.split(',')
-            responses = responses.split(',')
-            add_intent(tag, patterns, responses)
+            _, disease, description = parts
+            add_disease(disease, description)
             data, disease_data, symptom_data = load_data()  # Reload data after modification
             words, labels, docs_x, docs_y = preprocess_data(data)  # Reprocess data
             training, output = create_training_data(words, labels, docs_x, docs_y)  # Recreate training data
             model = load_or_train_model(training, output)  # Reload model
             continue
-        elif inp.lower().startswith("/remove_intent"):
+        elif inp.lower().startswith("/remove_disease"):
             parts = inp.split('|')
             if len(parts) != 2:
-                print("Usage: /remove_intent|tag")
+                print("Usage: /remove_disease|disease")
                 continue
-            _, tag = parts
-            remove_intent(tag)
+            _, disease = parts
+            remove_disease(disease)
             data, disease_data, symptom_data = load_data()  # Reload data after modification
             words, labels, docs_x, docs_y = preprocess_data(data)  # Reprocess data
             training, output = create_training_data(words, labels, docs_x, docs_y)  # Recreate training data
@@ -257,14 +260,17 @@ def chat(model, words, labels, data, disease_data, symptom_data,connection,curso
             if results[results_index] > 0.9:
                 response = ""
                 if tag == "disease_info":
+                    print("Disease!")
                     # Extract disease name from user input
                     disease_name = inp.split("about")[-1].strip().capitalize()
                     response = check_disease_info(disease_data, disease_name)
                 elif tag == "symptom_info":
+                    print("Symptom")
                     # Extract symptom name from user input
                     symptom_name = inp.split("about")[-1].strip().lower()
                     response = check_symptom_info(symptom_data, symptom_name)
                 else:
+                    print("Usual")
                     for tg in data["intents"]:
                         if tg["tag"] == tag:
                             responses = tg["responses"]
@@ -274,14 +280,10 @@ def chat(model, words, labels, data, disease_data, symptom_data,connection,curso
             else:	                
                 print("Sorry, I didn't understand you!")
                 log_exception(inp, tag)
-    if cursor:
-        cursor.close()
-    close_db_connection(connection)
 
 # Main execution
 if __name__ == "__main__":
-    connection, cursor = mysql_db_connection()
-    data, disease_data, symptom_data = load_data(connection,cursor)
+    data, disease_data, symptom_data = load_data()
     words, labels, docs_x, docs_y = preprocess_data(data)
     training, output = create_training_data(words, labels, docs_x, docs_y)
     model = load_or_train_model(training, output)

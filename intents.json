@@ -44,13 +44,13 @@
         },
         {
             "tag": "symptom_info",
-            "patterns": ["Tell me about {SymptomName}","What is {SymptomName}?","Explain {SymptomName}","Information about {SymptomName}"],
+            "patterns": ["Tell me about {SymptomName}","Information about {SymptomName}"],
             "responses": ["Fetching information about {SymptomName}."],
             "context_set": "symptom"
         },
         {
             "tag": "disease_info",
-            "patterns": ["Tell me about {DiseaseName}","What is {DiseaseName}?","Explain {DiseaseName}","Information about {DiseaseName}"],
+            "patterns": ["What is {DiseaseName}?","Explain {DiseaseName}"],
             "responses": ["Fetching information about {DiseaseName}."],
             "context_set": "disease"
         }
