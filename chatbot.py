@@ -26,14 +26,13 @@ conversation_history = []
     
 # Load data
 def load_data():
-    connection, cursor = mysql_db_connection()
     with open("intents.json") as file:	
         data = json.load(file)
     disease_data = get_disease_data()
     symptom_data = get_symptom_data()
     return data, disease_data, symptom_data
     
-# Preprocess data from intents file
+# Preprocess data from inputs
 def preprocess_data(data):
     words, labels, docs_x, docs_y = [], [], [], []
     for intent in data["intents"]:
@@ -48,7 +47,21 @@ def preprocess_data(data):
     words = sorted(list(set(words)))	
     labels = sorted(labels)
     return words, labels, docs_x, docs_y
-    
+
+def preprocess_disease_data(disease_data):
+    words, labels, docs_x, docs_y = [], [], [], []
+    for diseases in disease_data["diseases"]:
+        for descriptions in diseases["Description"]:
+            wrds = nltk.word_tokenize(descriptions)
+            words.extend(wrds)
+            docs_x.append(wrds)
+            docs_y.append(diseases["DiseaseName"])
+        if diseases["DiseaseName"] not in labels:
+            labels.append(diseases["DiseaseName"])
+    words = [stemmer.stem(w.lower()) for w in words if w != ("?" or "!")]
+    words = sorted(list(set(words)))
+    return words, labels, docs_x, docs_y
+
 # Create training data
 def create_training_data(words, labels, docs_x, docs_y):
     training = []	
@@ -91,6 +104,16 @@ def load_or_train_model(training, output):
     except:
         model = create_model(len(training[0]), len(output[0]))
         train_model(model, training, output)
+    return model
+
+def merged_model(model1, model2):
+    input_layer = keras.layers.Input((20,))
+    out1 = model1(input_layer)
+    conc = keras.layers.Concatenate()([input_layer, out1])
+    out2 = model2(conc)
+    xtrainshape = 10
+    output_layer = keras.layers.Dense(xtrainshape, "softmax")(out2)
+    model = keras.models.Model(inputs=input_layer, outputs=output_layer)
     return model
     
 # Utility functions	    
@@ -162,11 +185,16 @@ def close_db_connection(connection,cursor):
 
 def get_disease_data():
     connection, cursor = mysql_db_connection()
+    data = []
     try:
         if connection.is_connected():
-            dis_query = ("select DiseaseName,Description from disease")
+            dis_query = ("select DiseaseName,Description from disease;")
             cursor.execute(dis_query)
-            disease_result = cursor.fetchall()
+            for row in cursor.fetchall():
+                data_dict = {column[0]: row[i] for i, column in enumerate(cursor.description)}
+                data.append(data_dict)
+            disease_result = json.dumps(data)
+            disease_result = "{\"diseases\": " + disease_result + "}"
             return disease_result
     except Error as e:
         print("Disease query error: ", e)
@@ -270,12 +298,12 @@ def chat(model, words, labels, data, disease_data, symptom_data):
                     symptom_name = inp.split("about")[-1].strip().lower()
                     response = check_symptom_info(symptom_data, symptom_name)
                 else:
-                    print("Usual")
                     for tg in data["intents"]:
                         if tg["tag"] == tag:
                             responses = tg["responses"]
                             response = random.choice(responses)
-                print(f"{response} (Category: {tag})")
+                # print(f"{response} (Category: {tag})")
+                print(f"{response}")
                 update_history(conversation_history, inp, response)
             else:	                
                 print("Sorry, I didn't understand you!")

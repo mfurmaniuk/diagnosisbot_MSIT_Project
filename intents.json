@@ -21,7 +21,7 @@
         {
             "tag": "name",
             "patterns": ["what is your name","what should I call you","whats your name?"],
-            "responses": ["You can call me Chatbot.","I'm Chatbot!","I'm Chatbot."],
+            "responses": ["You can call me TriageBot.","I'm TriageBot!"],
             "context_set": "who"
         },
         {
