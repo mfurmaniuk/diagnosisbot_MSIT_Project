@@ -1,4 +1,5 @@
 #------------------------#
+# Based off
 # Tensorflow 2.0 chatbot #
 #   by VISHANK           #
 #------------------------#
@@ -26,6 +27,7 @@ conversation_history = []
     
 # Load data
 def load_data():
+    """Loads data from intents.json and MySQL Database for Disease and Symptoms."""
     with open("intents.json") as file:	
         data = json.load(file)
     disease_data = get_disease_data()
@@ -34,6 +36,7 @@ def load_data():
     
 # Preprocess data from inputs
 def preprocess_data(data):
+    """Tokenize the intents.json data for the model."""
     words, labels, docs_x, docs_y = [], [], [], []
     for intent in data["intents"]:
         for pattern in intent["patterns"]:	    
@@ -49,6 +52,7 @@ def preprocess_data(data):
     return words, labels, docs_x, docs_y
 
 def preprocess_disease_data(disease_data):
+    """Tokenize the Disease data for addition to the model."""
     words, labels, docs_x, docs_y = [], [], [], []
     for diseases in disease_data["diseases"]:
         for descriptions in diseases["Description"]:
@@ -64,6 +68,7 @@ def preprocess_disease_data(disease_data):
 
 # Create training data
 def create_training_data(words, labels, docs_x, docs_y):
+    """Create the data for training the model."""
     training = []	
     output = []	
     out_empty = [0 for _ in range(len(labels))]	
@@ -80,7 +85,8 @@ def create_training_data(words, labels, docs_x, docs_y):
     return np.array(training), np.array(output)	
 
 # Create the model
-def create_model(input_shape, output_shape):	
+def create_model(input_shape, output_shape):
+    """Create model for the AI."""
     model = keras.Sequential()
     model.add(keras.layers.InputLayer(shape=(input_shape,)))
     model.add(keras.layers.Dense(128, activation='relu'))
@@ -95,10 +101,12 @@ def create_model(input_shape, output_shape):
     return model
 
 def train_model(model, training, output):
+    """Train the model data for the AI and save the model."""
     model.fit(training, output, epochs=500, batch_size=256, validation_split=0.1)	  
     model.save('model.h5')
 
 def load_or_train_model(training, output):
+    """Either load the existing trained model, or create it if it does not exist."""
     try:	
         model = keras.models.load_model('model.h5')	   
     except:
@@ -107,6 +115,7 @@ def load_or_train_model(training, output):
     return model
 
 def merged_model(model1, model2):
+    """Merge models from different source data."""
     input_layer = keras.layers.Input((20,))
     out1 = model1(input_layer)
     conc = keras.layers.Concatenate()([input_layer, out1])
@@ -117,7 +126,8 @@ def merged_model(model1, model2):
     return model
     
 # Utility functions	    
-def bag_of_words(s, words):	
+def bag_of_words(s, words):
+    """Create the tokens from source data."""
     bag = [0] * len(words)
     s_words = nltk.word_tokenize(s)
     s_words = [stemmer.stem(word.lower()) for word in s_words]
@@ -141,17 +151,19 @@ def check_symptom_info(symptom_data, symptom_name):
     return "Symptom information not found."
 
 def update_history(conversation_history, user_input, bot_response):
+    """Add conversation to the model data to keep context."""
     conversation_history.append({'user': user_input, 'bot': bot_response})
     # Limit history length if needed
     if len(conversation_history) > 10:
         conversation_history.pop(0)
 
 def get_contextual_input(conversation_history, user_input):
-    # Combine conversation history into a single string
+    """Combine conversation history into a single string."""
     history_context = " ".join([f"User: {entry['user']} Bot: {entry['bot']}" for entry in conversation_history])
     return f"{history_context} User: {user_input}"
 
 def log_exception(user_input, predicted_tag):
+    """Note any tags or queries not found in source data."""
     try:
         with open('exceptions.txt', 'a') as f:
             f.write(f'{user_input}  (Predicted category: {predicted_tag})\n')
@@ -160,6 +172,7 @@ def log_exception(user_input, predicted_tag):
             f.write(f'{user_input}  (Predicted category: {predicted_tag})\n')
 
 def mysql_db_connection():
+    """Connect to source data in the MySQL database."""
     try:
         connection = mysql.connector.connect(host='localhost', database='diagnosebot', user='michael', password='F0xxyH4rl0tsC00l!')
         if connection.is_connected():
@@ -173,7 +186,7 @@ def mysql_db_connection():
     return None, None
 
 def close_db_connection(connection,cursor):
-    """Closes any lingering connections"""
+    """Closes any lingering connections."""
     try:
         if cursor:
             cursor.close()
@@ -184,6 +197,7 @@ def close_db_connection(connection,cursor):
         print("Error while connecting to MySQL to close", e)
 
 def get_disease_data():
+    """Get Disease data from the MySQL database."""
     connection, cursor = mysql_db_connection()
     data = []
     try:
@@ -201,6 +215,7 @@ def get_disease_data():
     close_db_connection(connection, cursor)
 
 def get_symptom_data():
+    """Get Symptom data from the MySQL database."""
     connection, cursor = mysql_db_connection()
     try:
         if connection.is_connected():
@@ -213,6 +228,7 @@ def get_symptom_data():
     close_db_connection(connection, cursor)
 
 def add_disease(disease, description):
+    """Add a new Disease to the database."""
     connection, cursor = mysql_db_connection()
     try:
         if connection.is_connected():
@@ -227,6 +243,7 @@ def add_disease(disease, description):
     close_db_connection(connection, cursor)
 
 def remove_disease(disease):
+    """Remove a Disease from the database."""
     connection, cursor = mysql_db_connection()
     try:
         if connection.is_connected():
@@ -242,6 +259,7 @@ def remove_disease(disease):
     
 # Main chat function
 def chat(model, words, labels, data, disease_data, symptom_data):
+    """Main Chatbot function."""
     print(f"Welcome to TriageBot to help you with your health needs.")
     print("Please let us know how you are feeling (type /bye to stop or /retrain to train again)!")
     print("You may also /add_disease or /remove_disease to be able to update the base data.")  	       
