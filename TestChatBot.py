@@ -114,3 +114,43 @@ combined_model.fit(X, y, epochs=10, batch_size=32)
 
 # Make predictions
 predictions = combined_model.predict(X)
+
+for row in cursor.fetchall():
+                data_dict = {column[0]: row[i] for i, column in enumerate(cursor.description)}
+                data.append(data_dict)
+            disease_result = json.dumps(data)
+            disease_result = "{\"diseases\": " + disease_result + "}"
+
+# To merge the existing two models
+from tensorflow import keras
+from tensorflow.keras import layers
+
+# Define the first model (e.g., processing text data)
+input_text = keras.Input(shape=(sequence_length,))
+x1 = vectorize_layer(input_text)
+x1 = layers.Embedding(input_dim=max_tokens, output_dim=16)(x1)
+x1 = layers.GlobalAveragePooling1D()(x1)
+x1 = layers.Dense(16, activation='relu')(x1)
+
+# Define the second model (e.g., processing dense features)
+input_dense = keras.Input(shape=(input_shape,))
+x2 = layers.Dense(128, activation='relu')(input_dense)
+x2 = layers.Dropout(0.5)(x2)
+x2 = layers.Dense(64, activation='relu')(x2)
+x2 = layers.Dropout(0.5)(x2)
+x2 = layers.Dense(32, activation='relu')(x2)
+
+# Concatenate the outputs of both models
+merged = layers.concatenate([x1, x2])
+
+# Add final output layers
+output = layers.Dense(output_shape, activation="softmax")(merged)
+
+# Create a combined model
+model = keras.Model(inputs=[input_text, input_dense], outputs=output)
+
+# Compile the combined model
+model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
+
+# Summary
+model.summary()
