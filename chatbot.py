@@ -13,6 +13,7 @@ import pandas as pd
 import random
 import tensorflow as tf
 from tensorflow import keras
+from keras.api import layers
 import mysql.connector
 from mysql.connector import Error
 
@@ -22,6 +23,17 @@ os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 # Initialize the stemmer
 stemmer = LancasterStemmer()
 
+# Vectorization settings
+max_tokens = 100  # Vocabulary size
+sequence_length = 20  # Max length of each sequence
+
+# Create a TextVectorization layer as an alternative to Tokenizer
+vectorize_layer = tf.keras.layers.TextVectorization(
+    max_tokens=max_tokens, 
+    output_mode='int', 
+    output_sequence_length=sequence_length
+)
+    
 # Intialize the conversation history
 conversation_history = []
     
@@ -53,18 +65,22 @@ def preprocess_data(data):
 
 def preprocess_disease_data(disease_data):
     """Tokenize the Disease data for addition to the model."""
-    words, labels, docs_x, docs_y = [], [], [], []
-    for diseases in disease_data["diseases"]:
-        for descriptions in diseases["Description"]:
-            wrds = nltk.word_tokenize(descriptions)
-            words.extend(wrds)
-            docs_x.append(wrds)
-            docs_y.append(diseases["DiseaseName"])
-        if diseases["DiseaseName"] not in labels:
-            labels.append(diseases["DiseaseName"])
-    words = [stemmer.stem(w.lower()) for w in words if w != ("?" or "!")]
-    words = sorted(list(set(words)))
-    return words, labels, docs_x, docs_y
+    # Combine disease names and descriptions into one list for tokenizing
+    all_texts = [' '.join(nltk.word_tokenize(disease) + nltk.word_tokenize(description))
+             for disease, description in disease_data]
+
+    # Adapt the layer to the dataset (fit it to the text data)
+    vectorize_layer.adapt(all_texts)
+
+    # Use the layer to transform the texts into integer sequences
+    sequences = vectorize_layer(all_texts)
+
+    # Convert the sequences to numpy array for further processing
+    padded_sequences = sequences.numpy()
+
+    # Display the tokenized and padded sequences
+    print(padded_sequences)
+    return padded_sequences
 
 # Create training data
 def create_training_data(words, labels, docs_x, docs_y):
@@ -100,17 +116,38 @@ def create_model(input_shape, output_shape):
     # model.summary()
     return model
 
+def create_db_model(padded_sequences):
+    """Create the model from database data"""
+    # Example labels (just for demonstration purposes, usually you'd get these from a dataset)
+    labels = [0, 1, 0]  # Binary labels for disease types (e.g., viral or non-viral)
+
+    # Build the model
+    model = tf.keras.Sequential([
+        # Add the TextVectorization layer directly into the model pipeline
+        vectorize_layer,
+        layers.Embedding(input_dim=max_tokens, output_dim=16, input_length=sequence_length),
+        layers.GlobalAveragePooling1D(),
+        layers.Dense(16, activation='relu'),
+        layers.Dense(1, activation='sigmoid')  # Binary classification
+    ])
+    model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+    return model
+
 def train_model(model, training, output):
     """Train the model data for the AI and save the model."""
-    model.fit(training, output, epochs=500, batch_size=256, validation_split=0.1)	  
+    model.fit(training, output, epochs=500, batch_size=256, validation_split=0.1)
+    # This is from the database
+    # model2.fit(padded_sequences, labels, epochs=10)  
     model.save('model.h5')
 
-def load_or_train_model(training, output):
+def load_or_train_model(training, output, padded_sequences):
     """Either load the existing trained model, or create it if it does not exist."""
     try:	
         model = keras.models.load_model('model.h5')	   
     except:
         model = create_model(len(training[0]), len(output[0]))
+        # model_d = create_db_model(padded_sequences)
+        # model = merged_model(model_j, model_d)
         train_model(model, training, output)
     return model
 
@@ -204,11 +241,7 @@ def get_disease_data():
         if connection.is_connected():
             dis_query = ("select DiseaseName,Description from disease;")
             cursor.execute(dis_query)
-            for row in cursor.fetchall():
-                data_dict = {column[0]: row[i] for i, column in enumerate(cursor.description)}
-                data.append(data_dict)
-            disease_result = json.dumps(data)
-            disease_result = "{\"diseases\": " + disease_result + "}"
+            disease_result = cursor.fetchall()
             return disease_result
     except Error as e:
         print("Disease query error: ", e)
@@ -331,6 +364,7 @@ def chat(model, words, labels, data, disease_data, symptom_data):
 if __name__ == "__main__":
     data, disease_data, symptom_data = load_data()
     words, labels, docs_x, docs_y = preprocess_data(data)
+    padded_sequences = preprocess_disease_data(disease_data)
     training, output = create_training_data(words, labels, docs_x, docs_y)
-    model = load_or_train_model(training, output)
+    model = load_or_train_model(training, output, padded_sequences)
     chat(model, words, labels, data, disease_data, symptom_data)              	
