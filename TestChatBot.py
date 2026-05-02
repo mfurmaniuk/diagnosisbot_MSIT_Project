@@ -1,10 +1,18 @@
 import mysql.connector
+import os
+from dotenv import load_dotenv
 
 from mysql.connector import Error
 connection = None
 
+load_dotenv()
+
 try:
-    connection = mysql.connector.connect(host='localhost', database='this_db', user='michael', password='F0xxyH4rl0tsC00l!')
+    connection = mysql.connector.connect(
+           host=os.getenv('MYSQL_SERVER'), 
+           database=os.getenv('MYSQL_DBTEST'), 
+           user=os.getenv('MYSQL_USERNAME'), 
+           password=os.getenv('MYSQL_PASSWORD'))
     if connection.is_connected():
         db_info = connection.get_server_info()
         print("Connected to MySQL Server version ", db_info)
