@@ -9,5 +9,10 @@
         "D:\\Program Files\\Python\\",
         "D:\\Program Files\\Python\\Scripts\\",
         "C:\\Users\\mfurm\\AppData\\Roaming\\Python\\Python312\\Scripts"
+    ],
+    "cursorpyright.analysis.extraPaths": [
+        "D:\\Program Files\\Python\\",
+        "D:\\Program Files\\Python\\Scripts\\",
+        "C:\\Users\\mfurm\\AppData\\Roaming\\Python\\Python312\\Scripts"
     ]
 }

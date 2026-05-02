@@ -1,2 +1,7 @@
 
 what is your name  (Predicted category: greeting)
+I feel sick  (Predicted category: greeting)
+are you a chatbot  (Predicted category: chatbot)
+not feeling well  (Predicted category: name)
+I need a physical  (Predicted category: name)
+what are you  (Predicted category: greeting)

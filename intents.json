@@ -43,15 +43,67 @@
             "context_set": "hospital"
         },
         {
+            "tag": "symptom_check",
+            "patterns": [
+                "I have itching and fever",
+                "I have a rash and nausea",
+                "my symptoms are headache and vomiting",
+                "I am experiencing joint pain and fatigue",
+                "I feel dizzy and have a cough",
+                "suffering from back pain and chills",
+                "I have been having chest pain",
+                "symptoms include fever and weight loss",
+                "I have skin rash and shivering",
+                "I am experiencing fatigue and breathlessness",
+                "I have high fever and sweating",
+                "my symptoms are nausea and dehydration",
+                "I feel weak with muscle pain",
+                "I have been vomiting and have diarrhoea",
+                "I have a runny nose and sore throat",
+                "experiencing anxiety and mood swings",
+                "I have abdominal pain and constipation",
+                "I feel breathless and have chest pain",
+                "I have yellowish skin and dark urine",
+                "my neck is stiff and I have a headache"
+            ],
+            "responses": ["Let me analyse your symptoms."],
+            "context_set": "diagnosis"
+        },
+        {
             "tag": "symptom_info",
-            "patterns": ["Tell me about {SymptomName}","Information about {SymptomName}"],
-            "responses": ["Fetching information about {SymptomName}."],
+            "patterns": [
+                "What are the precautions for Malaria",
+                "How do I treat Allergy",
+                "Treatment for Drug Reaction",
+                "Precautions for Diabetes",
+                "How to treat Hypothyroidism",
+                "What should I do for Dengue",
+                "Treatment for Typhoid",
+                "Precautions for Arthritis",
+                "How to manage GERD",
+                "What are the steps for treating Fungal infection"
+            ],
+            "responses": ["Fetching treatment information."],
             "context_set": "symptom"
         },
         {
             "tag": "disease_info",
-            "patterns": ["What is {DiseaseName}?","Explain {DiseaseName}"],
-            "responses": ["Fetching information about {DiseaseName}."],
+            "patterns": [
+                "What is Malaria?",
+                "Tell me about Allergy",
+                "Explain Drug Reaction",
+                "What is Diabetes?",
+                "Tell me about Hypothyroidism",
+                "What is Dengue?",
+                "Explain Typhoid",
+                "What is Arthritis?",
+                "Tell me about GERD",
+                "Explain Fungal infection",
+                "What is AIDS?",
+                "Tell me about Gastroenteritis",
+                "What is Chronic cholestasis?"
+            ],
+            "responses": ["Fetching disease information."],
             "context_set": "disease"
         }
     ]

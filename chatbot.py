@@ -4,7 +4,7 @@
 #   by VISHANK           #
 #------------------------#
 
-import json	
+import json
 import nltk
 from nltk.stem.lancaster import LancasterStemmer
 import numpy as np
@@ -13,96 +13,125 @@ import pandas as pd
 import random
 import tensorflow as tf
 from tensorflow import keras
-from keras.api import layers
 import mysql.connector
 from mysql.connector import Error
 
-# Settings needed to run TensorFlow without warnings
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 
-# Initialize the stemmer
 stemmer = LancasterStemmer()
 
-# Vectorization settings
-max_tokens = 100  # Vocabulary size
-sequence_length = 20  # Max length of each sequence
-
-# Create a TextVectorization layer as an alternative to Tokenizer
-vectorize_layer = tf.keras.layers.TextVectorization(
-    max_tokens=max_tokens, 
-    output_mode='int', 
-    output_sequence_length=sequence_length
-)
-    
-# Intialize the conversation history
 conversation_history = []
-    
-# Load data
+
 def load_data():
-    """Loads data from intents.json and MySQL Database for Disease and Symptoms."""
-    with open("intents.json") as file:	
+    """Loads data from intents.json and CSV files for disease and symptom lookups."""
+    with open("intents.json") as file:
         data = json.load(file)
     disease_data = get_disease_data()
     symptom_data = get_symptom_data()
     return data, disease_data, symptom_data
-    
-# Preprocess data from inputs
+
+def load_csv_data(filepath):
+    """Load data from a CSV file."""
+    return pd.read_csv(filepath)
+
 def preprocess_data(data):
-    """Tokenize the intents.json data for the model."""
+    """Tokenize the intents.json data for the intent model."""
     words, labels, docs_x, docs_y = [], [], [], []
     for intent in data["intents"]:
-        for pattern in intent["patterns"]:	    
-            wrds = nltk.word_tokenize(pattern)	        
+        for pattern in intent["patterns"]:
+            wrds = nltk.word_tokenize(pattern)
             words.extend(wrds)
-            docs_x.append(wrds)	        
-            docs_y.append(intent["tag"])        
-        if intent["tag"] not in labels:	    
+            docs_x.append(wrds)
+            docs_y.append(intent["tag"])
+        if intent["tag"] not in labels:
             labels.append(intent["tag"])
     words = [stemmer.stem(w.lower()) for w in words if w != ("?" or "!")]
-    words = sorted(list(set(words)))	
+    words = sorted(list(set(words)))
     labels = sorted(labels)
     return words, labels, docs_x, docs_y
 
-def preprocess_disease_data(disease_data):
-    """Tokenize the Disease data for addition to the model."""
-    # Combine disease names and descriptions into one list for tokenizing
-    all_texts = [' '.join(nltk.word_tokenize(disease) + nltk.word_tokenize(description))
-             for disease, description in disease_data]
+def load_symptom_training_data():
+    """Load binary symptom features and disease labels from Training.csv."""
+    df = pd.read_csv('source_data/chatbot-symptom-checker/Training.csv')
+    symptom_cols = [c for c in df.columns if c != 'prognosis']
+    X = df[symptom_cols].values.astype(np.float32)
+    prognosis_labels = sorted(df['prognosis'].unique().tolist())
+    y_idx = np.array([prognosis_labels.index(p) for p in df['prognosis']])
+    y = np.zeros((len(y_idx), len(prognosis_labels)), dtype=np.float32)
+    y[np.arange(len(y_idx)), y_idx] = 1
+    return X, y, symptom_cols, prognosis_labels
 
-    # Adapt the layer to the dataset (fit it to the text data)
-    vectorize_layer.adapt(all_texts)
+def create_symptom_model(input_shape, output_shape):
+    """Build a classifier: binary symptom vector → disease label."""
+    model = keras.Sequential([
+        keras.layers.InputLayer(shape=(input_shape,)),
+        keras.layers.Dense(128, activation='relu'),
+        keras.layers.Dropout(0.3),
+        keras.layers.Dense(64, activation='relu'),
+        keras.layers.Dropout(0.3),
+        keras.layers.Dense(output_shape, activation='softmax'),
+    ])
+    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+    return model
 
-    # Use the layer to transform the texts into integer sequences
-    sequences = vectorize_layer(all_texts)
+def load_or_train_symptom_model(X, y, output_shape):
+    """Load symptom_model.h5 if it exists, otherwise train and save it."""
+    try:
+        return keras.models.load_model('symptom_model.h5')
+    except Exception:
+        model = create_symptom_model(X.shape[1], output_shape)
+        model.fit(X, y, epochs=100, batch_size=32, validation_split=0.1)
+        model.save('symptom_model.h5')
+        return model
 
-    # Convert the sequences to numpy array for further processing
-    padded_sequences = sequences.numpy()
+def extract_symptoms(user_input, symptom_cols):
+    """Match words in user text against known symptom column names."""
+    col_lookup = {c.replace('_', ' ').strip().lower(): c for c in symptom_cols}
+    text = user_input.lower()
+    for filler in ("i have", "i am", "i'm", "i feel", "feeling", "experiencing",
+                   "suffering from", "my symptoms are", "symptoms include"):
+        text = text.replace(filler, ' ')
+    found = []
+    # Longer phrases first to avoid partial overlaps
+    for display, col in sorted(col_lookup.items(), key=lambda x: -len(x[0])):
+        if display in text:
+            found.append(col)
+            text = text.replace(display, ' ')
+    return found
 
-    # Display the tokenized and padded sequences
-    print(padded_sequences)
-    return padded_sequences
+def build_symptom_vector(symptoms_found, symptom_cols):
+    """Convert matched symptom column names into a binary feature vector."""
+    vec = np.zeros((1, len(symptom_cols)), dtype=np.float32)
+    for sym in symptoms_found:
+        if sym in symptom_cols:
+            vec[0, symptom_cols.index(sym)] = 1
+    return vec
 
-# Create training data
+def predict_disease_from_symptoms(symptom_model, symptom_vector, prognosis_labels):
+    """Return (disease_name, confidence) for the top prediction."""
+    results = symptom_model.predict(symptom_vector, verbose=0)[0]
+    idx = int(np.argmax(results))
+    return prognosis_labels[idx], float(results[idx])
+
 def create_training_data(words, labels, docs_x, docs_y):
-    """Create the data for training the model."""
-    training = []	
-    output = []	
-    out_empty = [0 for _ in range(len(labels))]	
-    for doc in docs_x:	
-        bag = [0] * len(words)	   
-        wrds = [stemmer.stem(w.lower()) for w in doc]	
-        for i,w in enumerate(words):	    
-            if w in wrds:	        
+    """Create bag-of-words training matrix for the intent model."""
+    training = []
+    output = []
+    out_empty = [0 for _ in range(len(labels))]
+    for doc in docs_x:
+        bag = [0] * len(words)
+        wrds = [stemmer.stem(w.lower()) for w in doc]
+        for i, w in enumerate(words):
+            if w in wrds:
                 bag[i] = 1
-        output_row = out_empty[:]	    
-        output_row[labels.index(docs_y[docs_x.index(doc)])] = 1	 
-        training.append(bag)	 
-        output.append(output_row)	
-    return np.array(training), np.array(output)	
+        output_row = out_empty[:]
+        output_row[labels.index(docs_y[docs_x.index(doc)])] = 1
+        training.append(bag)
+        output.append(output_row)
+    return np.array(training), np.array(output)
 
-# Create the model
 def create_model(input_shape, output_shape):
-    """Create model for the AI."""
+    """Create the intent classifier model."""
     model = keras.Sequential()
     model.add(keras.layers.InputLayer(shape=(input_shape,)))
     model.add(keras.layers.Dense(128, activation='relu'))
@@ -111,60 +140,25 @@ def create_model(input_shape, output_shape):
     model.add(keras.layers.Dropout(0.5))
     model.add(keras.layers.Dense(32, activation='relu'))
     model.add(keras.layers.Dense(output_shape, activation="softmax"))
-    model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])	      
-    # Uncomment and run this command to get the summary of the model	
-    # model.summary()
-    return model
-
-def create_db_model(padded_sequences):
-    """Create the model from database data"""
-    # Example labels (just for demonstration purposes, usually you'd get these from a dataset)
-    labels = [0, 1, 0]  # Binary labels for disease types (e.g., viral or non-viral)
-
-    # Build the model
-    model = tf.keras.Sequential([
-        # Add the TextVectorization layer directly into the model pipeline
-        vectorize_layer,
-        layers.Embedding(input_dim=max_tokens, output_dim=16, input_length=sequence_length),
-        layers.GlobalAveragePooling1D(),
-        layers.Dense(16, activation='relu'),
-        layers.Dense(1, activation='sigmoid')  # Binary classification
-    ])
-    model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+    model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
     return model
 
 def train_model(model, training, output):
-    """Train the model data for the AI and save the model."""
+    """Train and save the intent model."""
     model.fit(training, output, epochs=500, batch_size=256, validation_split=0.1)
-    # This is from the database
-    # model2.fit(padded_sequences, labels, epochs=10)  
     model.save('model.h5')
 
-def load_or_train_model(training, output, padded_sequences):
-    """Either load the existing trained model, or create it if it does not exist."""
-    try:	
-        model = keras.models.load_model('model.h5')	   
-    except:
+def load_or_train_model(training, output):
+    """Load model.h5 if it exists, otherwise train and save it."""
+    try:
+        return keras.models.load_model('model.h5')
+    except Exception:
         model = create_model(len(training[0]), len(output[0]))
-        # model_d = create_db_model(padded_sequences)
-        # model = merged_model(model_j, model_d)
         train_model(model, training, output)
-    return model
+        return model
 
-def merged_model(model1, model2):
-    """Merge models from different source data."""
-    input_layer = keras.layers.Input((20,))
-    out1 = model1(input_layer)
-    conc = keras.layers.Concatenate()([input_layer, out1])
-    out2 = model2(conc)
-    xtrainshape = 10
-    output_layer = keras.layers.Dense(xtrainshape, "softmax")(out2)
-    model = keras.models.Model(inputs=input_layer, outputs=output_layer)
-    return model
-    
-# Utility functions	    
 def bag_of_words(s, words):
-    """Create the tokens from source data."""
+    """Convert input string to a bag-of-words feature vector."""
     bag = [0] * len(words)
     s_words = nltk.word_tokenize(s)
     s_words = [stemmer.stem(word.lower()) for word in s_words]
@@ -173,140 +167,157 @@ def bag_of_words(s, words):
             bag[words.index(se)] = 1
     return np.array([bag])
 
+def extract_entity_from_input(inp):
+    """Extract a disease or symptom name from user input by scanning for trigger words."""
+    lower = inp.lower().rstrip('?').strip()
+    for trigger in ("precautions for", "treatment for", "treat", "about", "explain", "what is", "is"):
+        if trigger in lower:
+            candidate = lower.split(trigger, 1)[-1].strip()
+            if candidate:
+                return candidate.title()
+    return inp.strip().title()
+
 def check_disease_info(disease_data, disease_name):
-    """Look up disease information from the database."""
-    for disease in disease_data:
-        if disease_name.lower() in disease["DiseaseName"].lower():
-            return disease["Description"]
+    """Look up disease description from the loaded CSV data."""
+    for name, description in disease_data:
+        if disease_name.lower() in name.lower():
+            return description
     return "Disease information not found."
 
 def check_symptom_info(symptom_data, symptom_name):
-    """Look up symptom information from the database."""
-    for symptom in symptom_data:
-        if symptom_name.lower() in symptom["SymptomName"].lower():
-            return symptom["SymDesc"]
+    """Look up treatment precautions from the loaded CSV data."""
+    for treatment, immediate, second, third, longterm in symptom_data:
+        if symptom_name.lower() in treatment.lower():
+            return f"Immediate: {immediate}. Next steps: {second}. Then: {third}. Long-term: {longterm}."
     return "Symptom information not found."
 
 def update_history(conversation_history, user_input, bot_response):
-    """Add conversation to the model data to keep context."""
+    """Append an exchange to conversation history, capping at 10 entries."""
     conversation_history.append({'user': user_input, 'bot': bot_response})
-    # Limit history length if needed
     if len(conversation_history) > 10:
         conversation_history.pop(0)
 
 def get_contextual_input(conversation_history, user_input):
-    """Combine conversation history into a single string."""
+    """Prepend conversation history to the current input for context-aware prediction."""
     history_context = " ".join([f"User: {entry['user']} Bot: {entry['bot']}" for entry in conversation_history])
     return f"{history_context} User: {user_input}"
 
 def log_exception(user_input, predicted_tag):
-    """Note any tags or queries not found in source data."""
-    try:
-        with open('exceptions.txt', 'a') as f:
-            f.write(f'{user_input}  (Predicted category: {predicted_tag})\n')
-    except FileNotFoundError:
-        with open('exceptions.txt', 'w') as f:
-            f.write(f'{user_input}  (Predicted category: {predicted_tag})\n')
+    """Append unrecognised inputs to exceptions.txt for review."""
+    mode = 'a' if os.path.exists('exceptions.txt') else 'w'
+    with open('exceptions.txt', mode) as f:
+        f.write(f'{user_input}  (Predicted category: {predicted_tag})\n')
 
 def mysql_db_connection():
-    """Connect to source data in the MySQL database."""
+    """Connect to the MySQL database using credentials from environment variables."""
     try:
-        connection = mysql.connector.connect(host='localhost', database='diagnosebot', user='michael', password='F0xxyH4rl0tsC00l!')
+        connection = mysql.connector.connect(
+            host='localhost',
+            database='diagnosebot',
+            user=os.environ.get('DIAGNOSEBOT_DB_USER', 'michael'),
+            password=os.environ.get('DIAGNOSEBOT_DB_PASSWORD', ''),
+        )
         if connection.is_connected():
-            db_info = connection.get_server_info()
-            # Uncomment for connection checking
-            # print("Connected to MySQL Server version ", db_info)
             cursor = connection.cursor(buffered=True)
             return connection, cursor
     except Error as e:
         print("Error while connecting to MySQL", e)
     return None, None
 
-def close_db_connection(connection,cursor):
-    """Closes any lingering connections."""
+def close_db_connection(connection, cursor):
+    """Close the MySQL connection and cursor."""
     try:
         if cursor:
             cursor.close()
         if connection.is_connected():
             connection.close()
-            print("MySQL connection is closed.")
     except Error as e:
-        print("Error while connecting to MySQL to close", e)
+        print("Error while closing MySQL connection", e)
 
 def get_disease_data():
-    """Get Disease data from the MySQL database."""
-    connection, cursor = mysql_db_connection()
-    data = []
+    """Get disease descriptions (CSV mode; MySQL block left for reference)."""
+    """ connection, cursor = mysql_db_connection()
     try:
         if connection.is_connected():
-            dis_query = ("select DiseaseName,Description from disease;")
-            cursor.execute(dis_query)
-            disease_result = cursor.fetchall()
-            return disease_result
+            cursor.execute("select DiseaseName,Description from disease;")
+            return cursor.fetchall()
     except Error as e:
         print("Disease query error: ", e)
-    close_db_connection(connection, cursor)
+    finally:
+        close_db_connection(connection, cursor) """
+
+    df = pd.read_csv('source_data/chatbot-symptom-description/symptom_Description.csv')
+    return list(df[['DiseaseName', 'DiseaseDescription']].itertuples(index=False, name=None))
 
 def get_symptom_data():
-    """Get Symptom data from the MySQL database."""
-    connection, cursor = mysql_db_connection()
+    """Get treatment precaution data (CSV mode; MySQL block left for reference)."""
+    """ connection, cursor = mysql_db_connection()
     try:
         if connection.is_connected():
-            sym_query = ("select SymptomName,SymDesc from symptom")
-            cursor.execute(sym_query)
-            symptom_result = cursor.fetchall()
-            return symptom_result
+            cursor.execute("select SymptomName,SymDesc from symptom")
+            return cursor.fetchall()
     except Error as e:
         print("Symptom query error: ", e)
-    close_db_connection(connection, cursor)
+    finally:
+        close_db_connection(connection, cursor) """
+
+    df = pd.read_csv('source_data/chatbot-symptom-description/symptom_precaution.csv')
+    return list(df[['treatment', 'immediate', 'secondstep', 'thirdstep', 'longterm']].itertuples(index=False, name=None))
 
 def add_disease(disease, description):
-    """Add a new Disease to the database."""
+    """Add a new disease to the MySQL database."""
     connection, cursor = mysql_db_connection()
     try:
         if connection.is_connected():
             print("Adding new disease: ", disease)
-            # Create Insert statement then execute
-            disease_insert = ("""insert into disease(DiseaseName, Description) values(%s, %s)""")
-            result = cursor.execute(disease_insert, (disease, description))
+            cursor.execute(
+                "insert into disease(DiseaseName, Description) values(%s, %s)",
+                (disease, description),
+            )
             connection.commit()
-            print(f"Added new disease: {disease}, ", result)
+            print(f"Added new disease: {disease}")
     except Error as e:
-        print("Symptom query error: ", e)
+        print("Add disease error: ", e)
     close_db_connection(connection, cursor)
 
 def remove_disease(disease):
-    """Remove a Disease from the database."""
+    """Remove a disease from the MySQL database."""
     connection, cursor = mysql_db_connection()
     try:
         if connection.is_connected():
             print("Removing disease: ", disease)
-            # Create Delete statement then execute
-            disease_delete = "delete from disease where DiseaseName = \"" + disease + "\""
-            result = cursor.execute(disease_delete)
+            cursor.execute("delete from disease where DiseaseName = %s", (disease,))
             connection.commit()
-            print(f"Removed disease: {disease}, ", result)
+            print(f"Removed disease: {disease}")
     except Error as e:
-        print("Symptom query error: ", e)
+        print("Remove disease error: ", e)
     close_db_connection(connection, cursor)
-    
+
 # Main chat function
-def chat(model, words, labels, data, disease_data, symptom_data):
-    """Main Chatbot function."""
-    print(f"Welcome to TriageBot to help you with your health needs.")
-    print("Please let us know how you are feeling (type /bye to stop or /retrain to train again)!")
-    print("You may also /add_disease or /remove_disease to be able to update the base data.")  	       
-    while True:	       
-        inp = input("Patient: ")	
+def chat(model, words, labels, data, disease_data, symptom_data,
+         symptom_model, symptom_cols, prognosis_labels):
+    """Main chatbot loop."""
+    print("Welcome to TriageBot to help you with your health needs.")
+    print("Please let us know how you are feeling (type /bye to stop or /retrain to retrain)!")
+    print("You may also /add_disease or /remove_disease to update the base data.")
+    while True:
+        inp = input("Patient: ")
         if inp.lower() == "/bye":
             print("Goodbye!")
-            break	             	 
+            break
+
         elif inp.lower() == "/retrain":
             data, disease_data, symptom_data = load_data()
-            words, labels, docs_x, docs_y = preprocess_data(data)      
+            words, labels, docs_x, docs_y = preprocess_data(data)
             training, output = create_training_data(words, labels, docs_x, docs_y)
+            for f in ('model.h5', 'symptom_model.h5'):
+                if os.path.exists(f):
+                    os.remove(f)
             model = load_or_train_model(training, output)
+            X_sym, y_sym, symptom_cols, prognosis_labels = load_symptom_training_data()
+            symptom_model = load_or_train_symptom_model(X_sym, y_sym, len(prognosis_labels))
             continue
+
         elif inp.lower().startswith("/add_disease"):
             parts = inp.split('|')
             if len(parts) != 3:
@@ -314,11 +325,9 @@ def chat(model, words, labels, data, disease_data, symptom_data):
                 continue
             _, disease, description = parts
             add_disease(disease, description)
-            data, disease_data, symptom_data = load_data()  # Reload data after modification
-            words, labels, docs_x, docs_y = preprocess_data(data)  # Reprocess data
-            training, output = create_training_data(words, labels, docs_x, docs_y)  # Recreate training data
-            model = load_or_train_model(training, output)  # Reload model
+            data, disease_data, symptom_data = load_data()
             continue
+
         elif inp.lower().startswith("/remove_disease"):
             parts = inp.split('|')
             if len(parts) != 2:
@@ -326,37 +335,44 @@ def chat(model, words, labels, data, disease_data, symptom_data):
                 continue
             _, disease = parts
             remove_disease(disease)
-            data, disease_data, symptom_data = load_data()  # Reload data after modification
-            words, labels, docs_x, docs_y = preprocess_data(data)  # Reprocess data
-            training, output = create_training_data(words, labels, docs_x, docs_y)  # Recreate training data
-            model = load_or_train_model(training, output)  # Reload model
+            data, disease_data, symptom_data = load_data()
             continue
+
         else:
-            contextual_input = get_contextual_input(conversation_history, inp)           
-            results = model.predict([bag_of_words(contextual_input, words)])[0]
-            results_index = np.argmax(results)	                
+            contextual_input = get_contextual_input(conversation_history, inp)
+            results = model.predict([bag_of_words(contextual_input, words)], verbose=0)[0]
+            results_index = np.argmax(results)
             tag = labels[results_index]
-            if results[results_index] > 0.9:
+
+            if results[results_index] > 0.75:
                 response = ""
-                if tag == "disease_info":
-                    print("Disease!")
-                    # Extract disease name from user input
-                    disease_name = inp.split("about")[-1].strip().capitalize()
+                if tag == "symptom_check":
+                    symptoms_found = extract_symptoms(inp, symptom_cols)
+                    if not symptoms_found:
+                        response = ("I couldn't identify any symptoms in what you described. "
+                                    "Try listing them, e.g. 'I have itching, skin rash, and high fever'.")
+                    else:
+                        vec = build_symptom_vector(symptoms_found, symptom_cols)
+                        disease, confidence = predict_disease_from_symptoms(
+                            symptom_model, vec, prognosis_labels)
+                        readable = ', '.join(s.replace('_', ' ') for s in symptoms_found)
+                        response = (f"Based on your symptoms ({readable}), "
+                                    f"the closest match is: {disease} "
+                                    f"(confidence: {confidence:.0%}). "
+                                    "Please consult a doctor for a proper diagnosis.")
+                elif tag == "disease_info":
+                    disease_name = extract_entity_from_input(inp)
                     response = check_disease_info(disease_data, disease_name)
                 elif tag == "symptom_info":
-                    print("Symptom")
-                    # Extract symptom name from user input
-                    symptom_name = inp.split("about")[-1].strip().lower()
+                    symptom_name = extract_entity_from_input(inp)
                     response = check_symptom_info(symptom_data, symptom_name)
                 else:
                     for tg in data["intents"]:
                         if tg["tag"] == tag:
-                            responses = tg["responses"]
-                            response = random.choice(responses)
-                # print(f"{response} (Category: {tag})")
+                            response = random.choice(tg["responses"])
                 print(f"{response}")
                 update_history(conversation_history, inp, response)
-            else:	                
+            else:
                 print("Sorry, I didn't understand you!")
                 log_exception(inp, tag)
 
@@ -364,7 +380,9 @@ def chat(model, words, labels, data, disease_data, symptom_data):
 if __name__ == "__main__":
     data, disease_data, symptom_data = load_data()
     words, labels, docs_x, docs_y = preprocess_data(data)
-    padded_sequences = preprocess_disease_data(disease_data)
     training, output = create_training_data(words, labels, docs_x, docs_y)
-    model = load_or_train_model(training, output, padded_sequences)
-    chat(model, words, labels, data, disease_data, symptom_data)              	
+    model = load_or_train_model(training, output)
+    X_sym, y_sym, symptom_cols, prognosis_labels = load_symptom_training_data()
+    symptom_model = load_or_train_symptom_model(X_sym, y_sym, len(prognosis_labels))
+    chat(model, words, labels, data, disease_data, symptom_data,
+         symptom_model, symptom_cols, prognosis_labels)
