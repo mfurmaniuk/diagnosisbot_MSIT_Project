@@ -9,6 +9,7 @@ import nltk
 from nltk.stem.lancaster import LancasterStemmer
 import numpy as np
 import os
+from dotenv import load_dotenv
 import pandas as pd
 import random
 import tensorflow as tf
@@ -19,6 +20,7 @@ from mysql.connector import Error
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 
 stemmer = LancasterStemmer()
+load_dotenv()
 
 conversation_history = []
 
@@ -29,10 +31,6 @@ def load_data():
     disease_data = get_disease_data()
     symptom_data = get_symptom_data()
     return data, disease_data, symptom_data
-
-def load_csv_data(filepath):
-    """Load data from a CSV file."""
-    return pd.read_csv(filepath)
 
 def preprocess_data(data):
     """Tokenize the intents.json data for the intent model."""
@@ -212,10 +210,10 @@ def mysql_db_connection():
     """Connect to the MySQL database using credentials from environment variables."""
     try:
         connection = mysql.connector.connect(
-            host='localhost',
-            database='diagnosebot',
-            user=os.environ.get('DIAGNOSEBOT_DB_USER', 'michael'),
-            password=os.environ.get('DIAGNOSEBOT_DB_PASSWORD', ''),
+            host=os.getenv('MYSQL_SERVER'),
+            database=os.getenv('MYSQL_DB'),
+            user=os.getenv('MYSQL_USERNAME'),
+            password=os.getenv('MYSQL_PASSWORD'),
         )
         if connection.is_connected():
             cursor = connection.cursor(buffered=True)
@@ -229,7 +227,7 @@ def close_db_connection(connection, cursor):
     try:
         if cursor:
             cursor.close()
-        if connection.is_connected():
+        if connection and connection.is_connected():
             connection.close()
     except Error as e:
         print("Error while closing MySQL connection", e)
@@ -267,6 +265,9 @@ def get_symptom_data():
 def add_disease(disease, description):
     """Add a new disease to the MySQL database."""
     connection, cursor = mysql_db_connection()
+    if connection is None:
+        print("Add disease error: no database connection")
+        return
     try:
         if connection.is_connected():
             print("Adding new disease: ", disease)
@@ -283,6 +284,9 @@ def add_disease(disease, description):
 def remove_disease(disease):
     """Remove a disease from the MySQL database."""
     connection, cursor = mysql_db_connection()
+    if connection is None:
+        print("Remove disease error: no database connection")
+        return
     try:
         if connection.is_connected():
             print("Removing disease: ", disease)
