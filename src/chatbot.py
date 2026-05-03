@@ -24,9 +24,19 @@ load_dotenv()
 
 conversation_history = []
 
+# Configuration settings
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+INTENTS_PATH = os.path.join(BASE_DIR, "db", "intents.json")
+EXCEPTIONS_PATH = os.path.join(BASE_DIR, "db", "exceptions.txt")
+TRAINING_CSV = os.path.join(BASE_DIR, "db", "source_data", "chatbot-symptom-checker", "Training.csv")
+DESCRIPTION_CSV = os.path.join(BASE_DIR, "db", "source_data", "chatbot-symptom-description", "symptom_Description.csv")
+PRECAUTION_CSV = os.path.join(BASE_DIR, "db", "source_data", "chatbot-symptom-description", "symptom_precaution.csv")
+MODEL_PATH = os.path.join(BASE_DIR, "model.h5")
+SYMPTOM_MODEL_PATH = os.path.join(BASE_DIR, "symptom_model.h5")
+
 def load_data():
     """Loads data from intents.json and CSV files for disease and symptom lookups."""
-    with open("intents.json") as file:
+    with open(INTENTS_PATH) as file:
         data = json.load(file)
     disease_data = get_disease_data()
     symptom_data = get_symptom_data()
@@ -50,7 +60,7 @@ def preprocess_data(data):
 
 def load_symptom_training_data():
     """Load binary symptom features and disease labels from Training.csv."""
-    df = pd.read_csv('source_data/chatbot-symptom-checker/Training.csv')
+    df = pd.read_csv(TRAINING_CSV)
     symptom_cols = [c for c in df.columns if c != 'prognosis']
     X = df[symptom_cols].values.astype(np.float32)
     prognosis_labels = sorted(df['prognosis'].unique().tolist())
@@ -75,11 +85,11 @@ def create_symptom_model(input_shape, output_shape):
 def load_or_train_symptom_model(X, y, output_shape):
     """Load symptom_model.h5 if it exists, otherwise train and save it."""
     try:
-        return keras.models.load_model('symptom_model.h5')
+        return keras.models.load_model(SYMPTOM_MODEL_PATH)
     except Exception:
         model = create_symptom_model(X.shape[1], output_shape)
         model.fit(X, y, epochs=100, batch_size=32, validation_split=0.1)
-        model.save('symptom_model.h5')
+        model.save(SYMPTOM_MODEL_PATH)
         return model
 
 def extract_symptoms(user_input, symptom_cols):
@@ -144,12 +154,12 @@ def create_model(input_shape, output_shape):
 def train_model(model, training, output):
     """Train and save the intent model."""
     model.fit(training, output, epochs=500, batch_size=256, validation_split=0.1)
-    model.save('model.h5')
+    model.save(MODEL_PATH)
 
 def load_or_train_model(training, output):
     """Load model.h5 if it exists, otherwise train and save it."""
     try:
-        return keras.models.load_model('model.h5')
+        return keras.models.load_model(MODEL_PATH)
     except Exception:
         model = create_model(len(training[0]), len(output[0]))
         train_model(model, training, output)
@@ -234,32 +244,12 @@ def close_db_connection(connection, cursor):
 
 def get_disease_data():
     """Get disease descriptions (CSV mode; MySQL block left for reference)."""
-    """ connection, cursor = mysql_db_connection()
-    try:
-        if connection.is_connected():
-            cursor.execute("select DiseaseName,Description from disease;")
-            return cursor.fetchall()
-    except Error as e:
-        print("Disease query error: ", e)
-    finally:
-        close_db_connection(connection, cursor) """
-
-    df = pd.read_csv('source_data/chatbot-symptom-description/symptom_Description.csv')
+    df = pd.read_csv(DESCRIPTION_CSV)
     return list(df[['DiseaseName', 'DiseaseDescription']].itertuples(index=False, name=None))
 
 def get_symptom_data():
     """Get treatment precaution data (CSV mode; MySQL block left for reference)."""
-    """ connection, cursor = mysql_db_connection()
-    try:
-        if connection.is_connected():
-            cursor.execute("select SymptomName,SymDesc from symptom")
-            return cursor.fetchall()
-    except Error as e:
-        print("Symptom query error: ", e)
-    finally:
-        close_db_connection(connection, cursor) """
-
-    df = pd.read_csv('source_data/chatbot-symptom-description/symptom_precaution.csv')
+    df = pd.read_csv(PRECAUTION_CSV)
     return list(df[['treatment', 'immediate', 'secondstep', 'thirdstep', 'longterm']].itertuples(index=False, name=None))
 
 def add_disease(disease, description):
