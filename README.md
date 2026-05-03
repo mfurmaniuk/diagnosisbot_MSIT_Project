@@ -18,6 +18,8 @@ Requirements:<br>
 -Pandas 2.2.2<br>
 -Punkt from nltk 
 <path_to_local_python>>/python3.10.exe -c 'import nltk; nltk.download("punkt")'
+For other libraries install as per this example:
+``` python -m pip install python-dotenv ```
 
 Dataset is from: https://www.kaggle.com/datasets/itachi9604/disease-symptom-description-dataset
 The source_data folder contains the original datasets in CSV format as well as the testing and training data files.
@@ -35,7 +37,10 @@ This could be used for a local, lightweight version but is not implemented.
 Run the Chatbot using the Python script, which will build the data model from MySQL and the Patterns and Responses from the intents.json file
 From a Workbench run the chatbot.py script
 Or from the command line, in the Python venv
-<path>/.venv/Scripts/python.exe chatbot.py
+` <path>/.venv/Scripts/python.exe src/chatbot.py `
+Or when in the venv
+` python .\src\chatbot.py `
+
 
 ## Interactions
 Feel free to check on the chatbot, ask about diseases, or tell it how you are feeling.
