@@ -20,6 +20,8 @@ Requirements:<br>
 <path_to_local_python>>/python3.10.exe -c 'import nltk; nltk.download("punkt")'
 For other libraries install as per this example:
 ``` python -m pip install python-dotenv ```
+or this
+```.venv/Scripts/python.exe -m pip install pytest```
 
 Dataset is from: https://www.kaggle.com/datasets/itachi9604/disease-symptom-description-dataset
 The source_data folder contains the original datasets in CSV format as well as the testing and training data files.
